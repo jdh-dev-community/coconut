@@ -9,7 +9,3 @@ phases:
   build:
     commands:
       - ./gradlew test
-
-artifacts:
-  files:
-    - '**/*'

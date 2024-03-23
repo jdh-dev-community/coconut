@@ -6,6 +6,11 @@ phases:
   pre_build:
     commands:
       - java -version
+      - aws s3 cp $REMOTE_PATH > ./src/main/resources/application.yml
   build:
     commands:
       - ./gradlew test
+
+artifacts:
+  files:
+    - '**/*'

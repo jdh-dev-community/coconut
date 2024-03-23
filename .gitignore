@@ -36,3 +36,5 @@ out/
 ### VS Code ###
 .vscode/
 scripts/
+
+**/src/main/resources/**.yml

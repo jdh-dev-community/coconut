@@ -12,8 +12,9 @@ import java.util.Map;
 
 
 @Slf4j
-@RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1")
+@RestController
 public class QuizController {
 
   @Autowired

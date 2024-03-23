@@ -5,6 +5,6 @@ echo "@@@@@ Host start up started @@@@@" >> /home/ec2-user/deploy.log
 
 source ~/.bash_profile
 
-sudo rm -rf /home/ec2-user/$REPO
+sudo rm -rf "/home/ec2-user/$REPO"
 
 echo "@@@@@ Host start up finished @@@@@" >> /home/ec2-user/deploy.log

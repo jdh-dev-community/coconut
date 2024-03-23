@@ -4,8 +4,12 @@ files:
   - source: /
     destination: /home/ec2-user/quiz_service
 hooks:
+  ApplicationStop:
+    - location: deploy_scripts/host_cleanup_script.sh
+      timeout: 300
+      runas: ec2-user
   AfterInstall:
-    - location: deploy_scripts/cleanup_script.sh
+    - location: deploy_scripts/container_cleanup_script.sh
       timeout: 300
       runas: ec2-user
   ApplicationStart:

@@ -1,0 +1,15 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+  pre_build:
+    commands:
+      - java -version
+  build:
+    commands:
+      - ./gradlew test
+
+artifacts:
+  files:
+    - '**/*'

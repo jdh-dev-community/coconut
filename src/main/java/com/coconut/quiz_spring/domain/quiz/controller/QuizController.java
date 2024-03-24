@@ -5,6 +5,7 @@ import com.coconut.quiz_spring.domain.quiz.service.OpenAiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -16,6 +17,9 @@ import java.util.Map;
 @RequestMapping("/api/v1")
 @RestController
 public class QuizController {
+
+  @Value("${custom_key.test}")
+  private String logTest;
 
   @Autowired
   private OpenAiService openAiService;
@@ -41,7 +45,7 @@ public class QuizController {
 
   @GetMapping("/quiz")
   public String testConnect() {
-    return "connected";
+    return "connected: >> " + logTest;
   }
 
 

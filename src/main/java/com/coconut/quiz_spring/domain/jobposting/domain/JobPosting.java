@@ -1,4 +1,4 @@
-package com.coconut.quiz_spring.domain.interview.domain;
+package com.coconut.quiz_spring.domain.jobposting.domain;
 
 import com.coconut.quiz_spring.common.domain.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,16 +13,16 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 
 @Entity
-@Table(name = "interviews")
-public class Interview  extends BaseEntity {
+@Table(name = "jobpostings")
+public class JobPosting extends BaseEntity {
 
   @Schema(description = "id", example = "1")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Id
-  @Column(name = "interview_id")
-  private long interviewId;
+  @Column(name = "jobposting_id")
+  private long jobPostingId;
 
-  @Schema(description = "인터뷰 제목", example = "백엔드 주니어 채용 공고")
+  @Schema(description = "채용공고 제목", example = "백엔드 주니어 채용 공고")
   @Column(name = "title")
   private String title;
 
@@ -45,8 +45,8 @@ public class Interview  extends BaseEntity {
   private String icon;
 
   @Builder
-  public Interview(long interviewId, String title, String requirements, String preferred, String stack, String icon) {
-    this.interviewId = interviewId;
+  public JobPosting(long jobPostingId, String title, String requirements, String preferred, String stack, String icon) {
+    this.jobPostingId = jobPostingId;
     this.title = title;
     this.requirements = requirements;
     this.preferred = preferred;

@@ -1,14 +1,13 @@
 package com.coconut.quiz_spring.domain.interview.controller;
 
-import com.coconut.quiz_spring.domain.interview.dto.InterviewCreateReq;
-import com.coconut.quiz_spring.domain.interview.dto.InterviewDto;
-import com.coconut.quiz_spring.domain.interview.service.interfaces.InterviewService;
+import com.coconut.quiz_spring.domain.jobposting.controller.JobPostingController;
+import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingCreateReq;
+import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingDto;
+import com.coconut.quiz_spring.domain.jobposting.service.interfaces.JobPostingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,13 +27,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@WebMvcTest(InterviewController.class)
+@WebMvcTest(JobPostingController.class)
 @ActiveProfiles("test")
-public class InterviewControllerTest {
-  private final String baseUrl = "/api/v1/interview";
+public class JobPostingServiceControllerTest {
+  private final String baseUrl = "/api/v1/jobposting";
 
   @MockBean
-  private InterviewService interviewService;
+  private JobPostingService jobPostingService;
 
   @Autowired
   private ObjectMapper objectMapper;
@@ -43,9 +42,9 @@ public class InterviewControllerTest {
   private MockMvc mockMvc;
 
   @Nested
-  class 인터뷰생성_테스트 {
+  class 채용공고생성_테스트 {
     private Map<String, String> defaultRequest;
-    private InterviewDto interviewDto;
+    private JobPostingDto jobPostingDto;
 
     @BeforeEach
     public void setup() {
@@ -57,7 +56,7 @@ public class InterviewControllerTest {
               "icon", "/img/icon_spring.png"
       );
 
-      this.interviewDto = InterviewDto.of(
+      this.jobPostingDto = JobPostingDto.of(
               1,
               defaultRequest.get("title"),
               defaultRequest.get("requirements"),
@@ -101,7 +100,7 @@ public class InterviewControllerTest {
       Map<String, String> validRequest = defaultRequest;
       String validBody = objectMapper.writeValueAsString(validRequest);
 
-      when(interviewService.createInterview(any(InterviewCreateReq.class))).thenReturn(interviewDto);
+      when(jobPostingService.createJobPosting(any(JobPostingCreateReq.class))).thenReturn(jobPostingDto);
 
       postAndVerify(validBody)
               .andExpect(status().isCreated())

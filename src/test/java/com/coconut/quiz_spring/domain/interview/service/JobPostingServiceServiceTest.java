@@ -1,10 +1,9 @@
 package com.coconut.quiz_spring.domain.interview.service;
 
-import com.coconut.quiz_spring.domain.interview.domain.Interview;
-import com.coconut.quiz_spring.domain.interview.dto.InterviewCreateReq;
-import com.coconut.quiz_spring.domain.interview.dto.InterviewDto;
-import com.coconut.quiz_spring.domain.interview.repository.InterviewRepository;
-import com.coconut.quiz_spring.domain.interview.service.interfaces.InterviewService;
+import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingCreateReq;
+import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingDto;
+import com.coconut.quiz_spring.domain.jobposting.repository.JobPostingRepository;
+import com.coconut.quiz_spring.domain.jobposting.service.interfaces.JobPostingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,29 +22,29 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class InterviewServiceTest {
+public class JobPostingServiceServiceTest {
 
   @Autowired
-  private InterviewRepository interviewRepository;
+  private JobPostingRepository jobPostingRepository;
 
   @Autowired
-  private InterviewService interviewService;
+  private JobPostingService jobPostingService;
 
   @Autowired
   private ObjectMapper objectMapper;
 
   @AfterEach
   public void cleanup() {
-    interviewRepository.deleteAll();
+    jobPostingRepository.deleteAll();
   }
 
   @Nested
-  class 인터뷰생성_테스트 {
-    private InterviewCreateReq createDto;
+  class 채용공고생성_테스트 {
+    private JobPostingCreateReq createDto;
 
     @BeforeEach
     public void setup() {
-      this.createDto = InterviewCreateReq.of(
+      this.createDto = JobPostingCreateReq.of(
               "테스트 면접",
               "자바 스프링 프레임워크(Spring Framework)를 이용한 개발 경험 \n 자바(Java) 프로그래밍 언어에 대한 실무 지식 \n 스프링 부트(Spring Boot)를 이용한 RESTful API 개발 경험 \n 객체 지향 프로그래밍(OOP) 원칙에 대한 이해 \n MySQL, PostgreSQL, MongoDB 등의 데이터베이스 관리 시스템에 대한 이해와 경험",
               "클라우드 서비스(AWS, Azure, Google Cloud Platform) 경험\n 컨테이너화 도구(Docker, Kubernetes) 사용 경험\n CI/CD 파이프라인 구축 경험",
@@ -56,13 +55,13 @@ public class InterviewServiceTest {
     }
 
     @Test
-    public void 잘못된_입력으로_인터뷰_생성을_시도할_경우_IllegalArgumentException_발생() throws Exception {
-      assertThrows(IllegalArgumentException.class, () -> interviewService.createInterview(null));
+    public void 잘못된_입력으로_채용공고_생성을_시도할_경우_IllegalArgumentException_발생() throws Exception {
+      assertThrows(IllegalArgumentException.class, () -> jobPostingService.createJobPosting(null));
     }
 
     @Test
-    public void 인터뷰_생성을_위한_데이터가_255bytes가_초과해도_성공() throws Exception {
-      InterviewCreateReq longDataDto = InterviewCreateReq.of(
+    public void 채용공고_생성을_위한_데이터가_255bytes가_초과해도_성공() throws Exception {
+      JobPostingCreateReq longDataDto = JobPostingCreateReq.of(
               "테스트 면접",
               "자바 스프링 프레임워크(Spring Framework)를 이용한 개발 경험 \n 자바(Java) 프로그래밍 언어에 대한 실무 지식 \n 스프링 부트(Spring Boot)를 이용한 RESTful API 개발 경험 \n 객체 지향 프로그래밍(OOP) 원칙에 대한 이해 \n MySQL, PostgreSQL, MongoDB 등의 데이터베이스 관리 시스템에 대한 이해와 경험자바 스프링 프레임워크(Spring Framework)를 이용한 개발 경험 \n 자바(Java) 프로그래밍 언어에 대한 실무 지식 \n 스프링 부트(Spring Boot)를 이용한 RESTful API 개발 경험 \n 객체 지향 프로그래밍(OOP) 원칙에 대한 이해 \n MySQL, PostgreSQL, MongoDB 등의 데이터베이스 관리 시스템에 대한 이해와 경험자바 스프링 프레임워크(Spring Framework)를 이용한 개발 경험 \n 자바(Java) 프로그래밍 언어에 대한 실무 지식 \n 스프링 부트(Spring Boot)를 이용한 RESTful API 개발 경험 \n 객체 지향 프로그래밍(OOP) 원칙에 대한 이해 \n MySQL, PostgreSQL, MongoDB 등의 데이터베이스 관리 시스템에 대한 이해와 경험자바 스프링 프레임워크(Spring Framework)를 이용한 개발 경험 \n 자바(Java) 프로그래밍 언어에 대한 실무 지식 \n 스프링 부트(Spring Boot)를 이용한 RESTful API 개발 경험 \n 객체 지향 프로그래밍(OOP) 원칙에 대한 이해 \n MySQL, PostgreSQL, MongoDB 등의 데이터베이스 관리 시스템에 대한 이해와 경험자바 스프링 프레임워크(Spring Framework)를 이용한 개발 경험 \n 자바(Java) 프로그래밍 언어에 대한 실무 지식 \n 스프링 부트(Spring Boot)를 이용한 RESTful API 개발 경험 \n 객체 지향 프로그래밍(OOP) 원칙에 대한 이해 \n MySQL, PostgreSQL, MongoDB 등의 데이터베이스 관리 시스템에 대한 이해와 경험자바 스프링 프레임워크(Spring Framework)를 이용한 개발 경험 \n 자바(Java) 프로그래밍 언어에 대한 실무 지식 \n 스프링 부트(Spring Boot)를 이용한 RESTful API 개발 경험 \n 객체 지향 프로그래밍(OOP) 원칙에 대한 이해 \n MySQL, PostgreSQL, MongoDB 등의 데이터베이스 관리 시스템에 대한 이해와 경험자바 스프링 프레임워크(Spring Framework)를 이용한 개발 경험 \n 자바(Java) 프로그래밍 언어에 대한 실무 지식 \n 스프링 부트(Spring Boot)를 이용한 RESTful API 개발 경험 \n 객체 지향 프로그래밍(OOP) 원칙에 대한 이해 \n MySQL, PostgreSQL, MongoDB 등의 데이터베이스 관리 시스템에 대한 이해와 경험자바 스프링 프레임워크(Spring Framework)를 이용한 개발 경험 \n 자바(Java) 프로그래밍 언어에 대한 실무 지식 \n 스프링 부트(Spring Boot)를 이용한 RESTful API 개발 경험 \n 객체 지향 프로그래밍(OOP) 원칙에 대한 이해 \n MySQL, PostgreSQL, MongoDB 등의 데이터베이스 관리 시스템에 대한 이해와 경험자바 스프링 프레임워크(Spring Framework)를 이용한 개발 경험 \n 자바(Java) 프로그래밍 언어에 대한 실무 지식 \n 스프링 부트(Spring Boot)를 이용한 RESTful API 개발 경험 \n 객체 지향 프로그래밍(OOP) 원칙에 대한 이해 \n MySQL, PostgreSQL, MongoDB 등의 데이터베이스 관리 시스템에 대한 이해와 경험자바 스프링 프레임워크(Spring Framework)를 이용한 개발 경험 \n 자바(Java) 프로그래밍 언어에 대한 실무 지식 \n 스프링 부트(Spring Boot)를 이용한 RESTful API 개발 경험 \n 객체 지향 프로그래밍(OOP) 원칙에 대한 이해 \n MySQL, PostgreSQL, MongoDB 등의 데이터베이스 관리 시스템에 대한 이해와 경험자바 스프링 프레임워크(Spring Framework)를 이용한 개발 경험 \n 자바(Java) 프로그래밍 언어에 대한 실무 지식 \n 스프링 부트(Spring Boot)를 이용한 RESTful API 개발 경험 \n 객체 지향 프로그래밍(OOP) 원칙에 대한 이해 \n MySQL, PostgreSQL, MongoDB 등의 데이터베이스 관리 시스템에 대한 이해와 경험자바 스프링 프레임워크(Spring Framework)를 이용한 개발 경험 \n 자바(Java) 프로그래밍 언어에 대한 실무 지식 \n 스프링 부트(Spring Boot)를 이용한 RESTful API 개발 경험 \n 객체 지향 프로그래밍(OOP) 원칙에 대한 이해 \n MySQL, PostgreSQL, MongoDB 등의 데이터베이스 관리 시스템에 대한 이해와 경험자바 스프링 프레임워크(Spring Framework)를 이용한 개발 경험 \n 자바(Java) 프로그래밍 언어에 대한 실무 지식 \n 스프링 부트(Spring Boot)를 이용한 RESTful API 개발 경험 \n 객체 지향 프로그래밍(OOP) 원칙에 대한 이해 \n MySQL, PostgreSQL, MongoDB 등의 데이터베이스 관리 시스템에 대한 이해와 경험자바 스프링 프레임워크(Spring Framework)를 이용한 개발 경험 \n 자바(Java) 프로그래밍 언어에 대한 실무 지식 \n 스프링 부트(Spring Boot)를 이용한 RESTful API 개발 경험 \n 객체 지향 프로그래밍(OOP) 원칙에 대한 이해 \n MySQL, PostgreSQL, MongoDB 등의 데이터베이스 관리 시스템에 대한 이해와 경험자바 스프링 프레임워크(Spring Framework)를 이용한 개발 경험 \n 자바(Java) 프로그래밍 언어에 대한 실무 지식 \n 스프링 부트(Spring Boot)를 이용한 RESTful API 개발 경험 \n 객체 지향 프로그래밍(OOP) 원칙에 대한 이해 \n MySQL, PostgreSQL, MongoDB 등의 데이터베이스 관리 시스템에 대한 이해와 경험자바 스프링 프레임워크(Spring Framework)를 이용한 개발 경험 \n 자바(Java) 프로그래밍 언어에 대한 실무 지식 \n 스프링 부트(Spring Boot)를 이용한 RESTful API 개발 경험 \n 객체 지향 프로그래밍(OOP) 원칙에 대한 이해 \n MySQL, PostgreSQL, MongoDB 등의 데이터베이스 관리 시스템에 대한 이해와 경험자바 스프링 프레임워크(Spring Framework)를 이용한 개발 경험 \n 자바(Java) 프로그래밍 언어에 대한 실무 지식 \n 스프링 부트(Spring Boot)를 이용한 RESTful API 개발 경험 \n 객체 지향 프로그래밍(OOP) 원칙에 대한 이해 \n MySQL, PostgreSQL, MongoDB 등의 데이터베이스 관리 시스템에 대한 이해와 경험자바 스프링 프레임워크(Spring Framework)를 이용한 개발 경험 \n 자바(Java) 프로그래밍 언어에 대한 실무 지식 \n 스프링 부트(Spring Boot)를 이용한 RESTful API 개발 경험 \n 객체 지향 프로그래밍(OOP) 원칙에 대한 이해 \n MySQL, PostgreSQL, MongoDB 등의 데이터베이스 관리 시스템에 대한 이해와 경험",
               "클라우드 서비스(AWS, Azure, Google Cloud Platform) 경험\n 컨테이너화 도구(Docker, Kubernetes) 사용 경험\n CI/CD 파이프라인 구축 경험",
@@ -70,9 +69,9 @@ public class InterviewServiceTest {
               "/img/icon_spring.png"
       );
 
-      InterviewDto result = interviewService.createInterview(longDataDto);
+      JobPostingDto result = jobPostingService.createJobPosting(longDataDto);
 
-      assertThat(result.getInterviewId()).isNotNull();
+      assertThat(result.getJobPostingId()).isNotNull();
       assertThat(result.getTitle()).isEqualTo(longDataDto.getTitle());
       assertThat(result.getRequirements()).isEqualTo(longDataDto.getRequirements());
       assertThat(result.getPreferred()).isEqualTo(longDataDto.getPreferred());
@@ -81,10 +80,10 @@ public class InterviewServiceTest {
     }
 
     @Test
-    public void 인터뷰_생성에_성공한_경우_InterviewDto를_반환() throws Exception {
-      InterviewDto result = interviewService.createInterview(createDto);
+    public void 채용공고_생성에_성공한_경우_JobPostingDto를_반환() throws Exception {
+      JobPostingDto result = jobPostingService.createJobPosting(createDto);
 
-      assertThat(result.getInterviewId()).isNotNull();
+      assertThat(result.getJobPostingId()).isNotNull();
       assertThat(result.getTitle()).isEqualTo(createDto.getTitle());
       assertThat(result.getRequirements()).isEqualTo(createDto.getRequirements());
       assertThat(result.getPreferred()).isEqualTo(createDto.getPreferred());
@@ -93,12 +92,12 @@ public class InterviewServiceTest {
     }
 
     @Test
-    public void 생성된_인터뷰가_데이터베이스에_저장된다() throws Exception {
-      InterviewDto result = interviewService.createInterview(createDto);
-      Interview savedInterview = interviewRepository.findById(result.getInterviewId())
+    public void 생성된_채용공고가_데이터베이스에_저장된다() throws Exception {
+      JobPostingDto result = jobPostingService.createJobPosting(createDto);
+      com.coconut.quiz_spring.domain.jobposting.domain.JobPosting savedJobPosting = jobPostingRepository.findById(result.getJobPostingId())
               .orElseThrow(() -> new EntityNotFoundException());
 
-      assertThat(result.getInterviewId()).isEqualTo(savedInterview.getInterviewId());
+      assertThat(result.getJobPostingId()).isEqualTo(savedJobPosting.getJobPostingId());
     }
 
   }

@@ -1,15 +1,15 @@
-package com.coconut.quiz_spring.domain.interview.domain.mapper;
+package com.coconut.quiz_spring.domain.jobposting.domain.mapper;
 
-import com.coconut.quiz_spring.domain.interview.domain.Interview;
-import com.coconut.quiz_spring.domain.interview.dto.InterviewCreateReq;
+import com.coconut.quiz_spring.domain.jobposting.domain.JobPosting;
+import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingCreateReq;
 import org.springframework.stereotype.Component;
 
 @Component
-public class InterviewMapper {
-  public Interview from(InterviewCreateReq dto) {
+public class JobPostingMapper {
+  public JobPosting from(JobPostingCreateReq dto) {
     if (dto == null) throw new IllegalArgumentException("dto는 null이 될 수 없습니다.");
 
-    return Interview.builder()
+    return JobPosting.builder()
             .title(dto.getTitle())
             .requirements(dto.getRequirements())
             .preferred(dto.getPreferred())

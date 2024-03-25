@@ -19,10 +19,6 @@ import org.springframework.test.context.ActiveProfiles;
 import javax.persistence.EntityNotFoundException;
 
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -90,14 +86,13 @@ public class JobPostingServiceServiceTest {
       long matchedId = savedJobPosting.getJobPostingId();
       JobPostingDto result = jobPostingService.getJobPosting(matchedId);
 
-      assertThat(result.getJobPostingId()).isEqualTo(savedJobPosting.getJobPostingId());
-      assertThat(result.getTitle()).isEqualTo(savedJobPosting.getTitle());
-      assertThat(result.getRequirements()).isEqualTo(savedJobPosting.getRequirements());
-      assertThat(result.getPreferred()).isEqualTo(savedJobPosting.getPreferred());
-      assertThat(result.getStack()).isEqualTo(savedJobPosting.getStack());
-      assertThat(result.getIcon()).isEqualTo(savedJobPosting.getIcon());
-      assertThat(result.getViewCount()).isEqualTo(savedJobPosting.getViewCount() + 1);
-
+      assertEquals(savedJobPosting.getJobPostingId(), result.getJobPostingId());
+      assertEquals(savedJobPosting.getTitle(), result.getTitle());
+      assertEquals(savedJobPosting.getRequirements(), result.getRequirements());
+      assertEquals(savedJobPosting.getPreferred(), result.getPreferred());
+      assertEquals(savedJobPosting.getStack(), result.getStack());
+      assertEquals(savedJobPosting.getIcon(), result.getIcon());
+      assertEquals(savedJobPosting.getViewCount() + 1, result.getViewCount());
       assertThat(result.getUpdatedAt()).isNotNull();
     }
 
@@ -106,7 +101,7 @@ public class JobPostingServiceServiceTest {
       long matchedId = savedJobPosting.getJobPostingId();
       JobPostingDto result = jobPostingService.getJobPosting(matchedId);
 
-      assertThat(result.getViewCount()).isEqualTo(savedJobPosting.getViewCount() + 1);
+      assertEquals(savedJobPosting.getViewCount() + 1, result.getViewCount());
     }
 
     @Test
@@ -161,12 +156,12 @@ public class JobPostingServiceServiceTest {
       JobPostingDto result = jobPostingService.createJobPosting(longDataDto);
 
       assertThat(result.getJobPostingId()).isNotNull();
-      assertThat(result.getTitle()).isEqualTo(longDataDto.getTitle());
-      assertThat(result.getRequirements()).isEqualTo(longDataDto.getRequirements());
-      assertThat(result.getPreferred()).isEqualTo(longDataDto.getPreferred());
-      assertThat(result.getStack()).isEqualTo(longDataDto.getStack());
-      assertThat(result.getIcon()).isEqualTo(longDataDto.getIcon());
-      assertThat(result.getViewCount()).isEqualTo(0);
+      assertEquals(longDataDto.getTitle(), result.getTitle());
+      assertEquals(longDataDto.getRequirements(), result.getRequirements());
+      assertEquals(longDataDto.getPreferred(), result.getPreferred());
+      assertEquals(longDataDto.getStack(), result.getStack());
+      assertEquals(longDataDto.getIcon(), result.getIcon());
+      assertEquals(0, result.getViewCount());
       assertThat(result.getUpdatedAt()).isNotNull();
     }
 
@@ -175,12 +170,12 @@ public class JobPostingServiceServiceTest {
       JobPostingDto result = jobPostingService.createJobPosting(createDto);
 
       assertThat(result.getJobPostingId()).isNotNull();
-      assertThat(result.getTitle()).isEqualTo(createDto.getTitle());
-      assertThat(result.getRequirements()).isEqualTo(createDto.getRequirements());
-      assertThat(result.getPreferred()).isEqualTo(createDto.getPreferred());
-      assertThat(result.getStack()).isEqualTo(createDto.getStack());
-      assertThat(result.getIcon()).isEqualTo(createDto.getIcon());
-      assertThat(result.getViewCount()).isEqualTo(0);
+      assertEquals(createDto.getTitle(), result.getTitle());
+      assertEquals(createDto.getRequirements(), result.getRequirements());
+      assertEquals(createDto.getPreferred(), result.getPreferred());
+      assertEquals(createDto.getStack(), result.getStack());
+      assertEquals(createDto.getIcon(), result.getIcon());
+      assertEquals(0, result.getViewCount());
       assertThat(result.getUpdatedAt()).isNotNull();
     }
 
@@ -190,7 +185,7 @@ public class JobPostingServiceServiceTest {
       JobPosting savedJobPosting = jobPostingRepository.findById(result.getJobPostingId())
               .orElseThrow(() -> new EntityNotFoundException());
 
-      assertThat(result.getJobPostingId()).isEqualTo(savedJobPosting.getJobPostingId());
+      assertEquals(savedJobPosting.getJobPostingId(), result.getJobPostingId());
     }
 
   }

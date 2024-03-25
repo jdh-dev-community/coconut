@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+
 
 @Slf4j
 @Service
@@ -31,14 +33,19 @@ public class JobPostingServiceServiceImpl implements JobPostingService {
   }
 
   @Override
+  public JobPostingDto getJobPosting(long jobPostingId) {
+    JobPosting jobPosting = jobPostingRepository.findById(jobPostingId)
+            .orElseThrow(() -> new EntityNotFoundException());
+
+    return JobPostingDto.from(jobPosting);
+  }
+
+  @Override
   public JobPostingDto editJobPosting(JobPostingEditReq dto) {
     return null;
   }
 
-  @Override
-  public JobPostingDto getJobPosting(long jobPostingId) {
-    return null;
-  }
+
 
   @Override
   public void deleteJobPosting(long jobPostingId) {

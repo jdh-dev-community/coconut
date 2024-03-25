@@ -25,7 +25,13 @@ public class JobPostingController {
   public void getJobPostingList() {}
 
   @GetMapping("/jobposting/{id}")
-  public void getJobPostingService() {}
+  public CustomResponse<JobPostingDto> getJobPosting(@PathVariable("id") long jobPostingId) {
+    JobPostingDto result = jobPostingService.getJobPosting(jobPostingId);
+    CustomResponse<JobPostingDto> response = CustomResponse.of(result);
+
+    return response;
+  }
+
 
   @Operation(summary = "채용공고 생성", description = "채용공고을 생성합니다.")
   @ResponseStatus(HttpStatus.CREATED)

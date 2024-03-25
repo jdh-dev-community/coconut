@@ -13,21 +13,34 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
+import javax.persistence.EntityNotFoundException;
+
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+  @ResponseStatus(NOT_FOUND)
+  @ExceptionHandler(EntityNotFoundException.class)
+  public @ResponseBody CustomResponse handleEntityNotFoundException(WebRequest req, EntityNotFoundException ex) {
+    log.info("error handler: handleEntityNotFoundException");
+    HttpErrorInfo errorInfo = createHttpErrorInfo(BAD_REQUEST, req, ex);
+    return CustomResponse.of(errorInfo);
+  }
+
   @ResponseStatus(BAD_REQUEST)
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public @ResponseBody CustomResponse handleMethodArgumentNotValidException(WebRequest req, MethodArgumentNotValidException ex) {
+    log.info("error handler: handleMethodArgumentNotValidException");
     HttpErrorInfo errorInfo = createHttpErrorInfo(BAD_REQUEST, req, ex);
     return CustomResponse.of(errorInfo);
   }
   @ResponseStatus(BAD_REQUEST)
   @ExceptionHandler(IllegalArgumentException.class)
   public @ResponseBody CustomResponse handleIllegalArgumentException(WebRequest req, IllegalArgumentException ex) {
+    log.info("error handler: handleIllegalArgumentException");
     HttpErrorInfo errorInfo = createHttpErrorInfo(BAD_REQUEST, req, ex);
     return CustomResponse.of(errorInfo);
   }
@@ -35,6 +48,7 @@ public class GlobalExceptionHandler {
   @ResponseStatus(BAD_REQUEST)
   @ExceptionHandler(DataIntegrityViolationException.class)
   public @ResponseBody CustomResponse handleDataIntegrityViolationException(WebRequest req, DataIntegrityViolationException ex) {
+    log.info("error handler: handleDataIntegrityViolationException");
     HttpErrorInfo errorInfo;
     Throwable rootCause = ex.getRootCause();
 

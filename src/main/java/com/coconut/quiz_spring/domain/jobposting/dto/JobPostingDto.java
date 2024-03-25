@@ -31,10 +31,13 @@ public class JobPostingDto {
   @Schema(description = "아이콘", example = "/springboot (s3 path)")
   private String icon;
 
+  @Schema(description = "조회수", example = "100")
+  private long viewCount;
+
   @Schema(description = "최근 수정일", example = "2023-01-01T12:00:00")
   private LocalDateTime updatedAt;
 
-  public static JobPostingDto of (long jobPostingId, String title, String requirements, String preferred, String stack, String icon, LocalDateTime updatedAt) {
+  public static JobPostingDto of (long jobPostingId, String title, String requirements, String preferred, String stack, String icon, long viewCount, LocalDateTime updatedAt) {
     return JobPostingDto.builder()
             .jobPostingId(jobPostingId)
             .title(title)
@@ -42,6 +45,7 @@ public class JobPostingDto {
             .preferred(preferred)
             .stack(stack)
             .icon(icon)
+            .viewCount(viewCount)
             .updatedAt(updatedAt)
             .build();
   }
@@ -54,6 +58,7 @@ public class JobPostingDto {
             jobPosting.getPreferred(),
             jobPosting.getStack(),
             jobPosting.getIcon(),
+            jobPosting.getViewCount(),
             jobPosting.getUpdatedAt()
     );
   }

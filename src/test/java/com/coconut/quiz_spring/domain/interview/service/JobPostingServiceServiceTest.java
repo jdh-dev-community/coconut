@@ -5,6 +5,7 @@ import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingCreateReq;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingDto;
 import com.coconut.quiz_spring.domain.jobposting.repository.JobPostingRepository;
 import com.coconut.quiz_spring.domain.jobposting.service.interfaces.JobPostingService;
+import com.coconut.quiz_spring.testUtils.ConcurrencyTestUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,8 +19,13 @@ import org.springframework.test.context.ActiveProfiles;
 import javax.persistence.EntityNotFoundException;
 
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
@@ -62,6 +68,7 @@ public class JobPostingServiceServiceTest {
               .preferred(jobPostingData.get("preferred"))
               .stack(jobPostingData.get("stack"))
               .icon(jobPostingData.get("icon"))
+              .viewCount(0)
               .build();
 
       savedJobPosting = jobPostingRepository.save(jobPosting);
@@ -89,7 +96,28 @@ public class JobPostingServiceServiceTest {
       assertThat(result.getPreferred()).isEqualTo(savedJobPosting.getPreferred());
       assertThat(result.getStack()).isEqualTo(savedJobPosting.getStack());
       assertThat(result.getIcon()).isEqualTo(savedJobPosting.getIcon());
+      assertThat(result.getViewCount()).isEqualTo(savedJobPosting.getViewCount() + 1);
+
       assertThat(result.getUpdatedAt()).isNotNull();
+    }
+
+    @Test
+    public void 주어진Id와_매칭되는_공고가_있는_경우_해당_공고의_조회수_1_증가() {
+      long matchedId = savedJobPosting.getJobPostingId();
+      JobPostingDto result = jobPostingService.getJobPosting(matchedId);
+
+      assertThat(result.getViewCount()).isEqualTo(savedJobPosting.getViewCount() + 1);
+    }
+
+    @Test
+    public void 동시에_채용공고_조회를_시도해도_조회수_일관성이_지켜진다() throws InterruptedException {
+      long matchedId = savedJobPosting.getJobPostingId();
+      int executeCount = 100;
+
+      ConcurrencyTestUtils.executeConcurrently(() -> jobPostingService.getJobPosting(matchedId), executeCount);
+
+      JobPostingDto result = jobPostingService.getJobPosting(matchedId);
+      assertEquals(executeCount + 1, result.getViewCount());
     }
 
   }
@@ -138,6 +166,7 @@ public class JobPostingServiceServiceTest {
       assertThat(result.getPreferred()).isEqualTo(longDataDto.getPreferred());
       assertThat(result.getStack()).isEqualTo(longDataDto.getStack());
       assertThat(result.getIcon()).isEqualTo(longDataDto.getIcon());
+      assertThat(result.getViewCount()).isEqualTo(0);
       assertThat(result.getUpdatedAt()).isNotNull();
     }
 
@@ -151,6 +180,7 @@ public class JobPostingServiceServiceTest {
       assertThat(result.getPreferred()).isEqualTo(createDto.getPreferred());
       assertThat(result.getStack()).isEqualTo(createDto.getStack());
       assertThat(result.getIcon()).isEqualTo(createDto.getIcon());
+      assertThat(result.getViewCount()).isEqualTo(0);
       assertThat(result.getUpdatedAt()).isNotNull();
     }
 

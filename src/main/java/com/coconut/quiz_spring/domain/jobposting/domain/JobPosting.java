@@ -44,13 +44,22 @@ public class JobPosting extends BaseEntity {
   @Column(name = "icon_path")
   private String icon;
 
+  @Schema(description = "조회수", example = "100")
+  @Column(name = "view_count")
+  private long viewCount;
+
+  public void updateViewCount(long updatedViewCount) {
+    this.viewCount = updatedViewCount;
+  }
+
   @Builder
-  public JobPosting(long jobPostingId, String title, String requirements, String preferred, String stack, String icon) {
+  public JobPosting(long jobPostingId, String title, String requirements, String preferred, String stack, String icon, long viewCount) {
     this.jobPostingId = jobPostingId;
     this.title = title;
     this.requirements = requirements;
     this.preferred = preferred;
     this.stack = stack;
     this.icon = icon;
+    this.viewCount = viewCount;
   }
 }

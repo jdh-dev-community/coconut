@@ -57,6 +57,7 @@ public class JobPostingServiceControllerTest {
               "클라우드 서비스(AWS, Azure, Google Cloud Platform) 경험\n 컨테이너화 도구(Docker, Kubernetes) 사용 경험\n CI/CD 파이프라인 구축 경험",
               "springboot,java",
               "/img/icon_spring.png",
+              0,
               LocalDateTime.now()
       );
     }
@@ -120,6 +121,7 @@ public class JobPostingServiceControllerTest {
               defaultRequest.get("preferred"),
               defaultRequest.get("stack"),
               defaultRequest.get("icon"),
+              0,
               LocalDateTime.now()
       );
     }

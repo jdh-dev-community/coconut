@@ -15,6 +15,7 @@ public class JobPostingMapper {
             .preferred(dto.getPreferred())
             .stack(dto.getStack())
             .icon(dto.getIcon())
+            .viewCount(0)
             .build();
   }
 }

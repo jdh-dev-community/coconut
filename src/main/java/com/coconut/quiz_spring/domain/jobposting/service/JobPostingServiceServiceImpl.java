@@ -10,6 +10,7 @@ import com.coconut.quiz_spring.domain.jobposting.service.interfaces.JobPostingSe
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -32,10 +33,13 @@ public class JobPostingServiceServiceImpl implements JobPostingService {
     return JobPostingDto.from(savedJobPosting);
   }
 
+  @Transactional
   @Override
   public JobPostingDto getJobPosting(long jobPostingId) {
-    JobPosting jobPosting = jobPostingRepository.findById(jobPostingId)
+    JobPosting jobPosting = jobPostingRepository.findByIdWithLock(jobPostingId)
             .orElseThrow(() -> new EntityNotFoundException());
+
+    jobPosting.updateViewCount(jobPosting.getViewCount() + 1);
 
     return JobPostingDto.from(jobPosting);
   }

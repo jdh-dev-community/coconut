@@ -1,12 +1,15 @@
 package com.coconut.quiz_spring.domain.jobposting.service;
 
+import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingAction;
 import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingStatus;
 import com.coconut.quiz_spring.domain.jobposting.domain.JobPosting;
 import com.coconut.quiz_spring.domain.jobposting.domain.mapper.JobPostingMapper;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingCreateReq;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingDto;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingEditReq;
+import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingHistoryCreateReq;
 import com.coconut.quiz_spring.domain.jobposting.repository.JobPostingRepository;
+import com.coconut.quiz_spring.domain.jobposting.service.interfaces.JobPostingHistoryService;
 import com.coconut.quiz_spring.domain.jobposting.service.interfaces.JobPostingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,16 +17,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Map;
 
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class JobPostingServiceServiceImpl implements JobPostingService {
+public class JobPostingServiceImpl implements JobPostingService {
 
   private final JobPostingRepository jobPostingRepository;
 
   private final JobPostingMapper jobPostingMapper;
+
+  private final JobPostingHistoryService jobPostingHistoryService;
 
 
   @Override
@@ -31,8 +37,13 @@ public class JobPostingServiceServiceImpl implements JobPostingService {
     JobPosting jobPosting = jobPostingMapper.from(dto);
     JobPosting savedJobPosting = jobPostingRepository.save(jobPosting);
 
+
+    logHistory("ToBeUserId", JobPostingAction.CREATE, savedJobPosting.getJobPostingId(), dto);
+
     return JobPostingDto.from(savedJobPosting);
   }
+
+
 
   @Transactional
   @Override
@@ -51,7 +62,6 @@ public class JobPostingServiceServiceImpl implements JobPostingService {
   }
 
 
-
   @Transactional
   @Override
   public JobPostingDto deleteJobPosting(long jobPostingId) {
@@ -60,6 +70,19 @@ public class JobPostingServiceServiceImpl implements JobPostingService {
 
     jobPosting.updateStatus(JobPostingStatus.DELETED);
 
+    logHistory("ToBeUserId", JobPostingAction.DELETE, jobPostingId, null);
+
     return JobPostingDto.from(jobPosting);
   }
+
+  private void logHistory(String actor, JobPostingAction action, long jobPostingId, Object dto) {
+    try {
+      JobPostingHistoryCreateReq history = JobPostingHistoryCreateReq.of(jobPostingId, actor, action, dto);
+      jobPostingHistoryService.createHistory(history);
+    } catch (RuntimeException ex) {
+      log.error(ex.getMessage());
+      log.info("로그 생성에 실패하였습니다.");
+    }
+  }
+
 }

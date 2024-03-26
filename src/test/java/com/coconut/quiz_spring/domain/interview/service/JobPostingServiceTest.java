@@ -4,23 +4,21 @@ import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingStatus;
 import com.coconut.quiz_spring.domain.jobposting.domain.JobPosting;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingCreateReq;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingDto;
+import com.coconut.quiz_spring.domain.jobposting.repository.JobPostingHistoryRepository;
 import com.coconut.quiz_spring.domain.jobposting.repository.JobPostingRepository;
+import com.coconut.quiz_spring.domain.jobposting.service.interfaces.JobPostingHistoryService;
 import com.coconut.quiz_spring.domain.jobposting.service.interfaces.JobPostingService;
 import com.coconut.quiz_spring.testUtils.ConcurrencyTestUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.persistence.EntityNotFoundException;
-import javax.validation.constraints.Null;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -35,9 +33,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class JobPostingServiceServiceTest {
+public class JobPostingServiceTest {
 
   @Autowired
   private JobPostingRepository jobPostingRepository;
@@ -46,7 +43,7 @@ public class JobPostingServiceServiceTest {
   private JobPostingService jobPostingService;
 
   @Autowired
-  private ObjectMapper objectMapper;
+  private JobPostingHistoryRepository jobPostingHistoryService;
 
   private Map<String, String> jobPostingData;
 
@@ -200,6 +197,11 @@ public class JobPostingServiceServiceTest {
               .orElseThrow(() -> new EntityNotFoundException());
 
       assertEquals(savedJobPosting.getJobPostingId(), result.getJobPostingId());
+    }
+
+    @Test
+    public void 채용공고_생성에_성공한_경우_history를_남긴다() {
+
     }
 
   }

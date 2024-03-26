@@ -1,5 +1,6 @@
 package com.coconut.quiz_spring.domain.interview.controller;
 
+import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingStatus;
 import com.coconut.quiz_spring.domain.jobposting.controller.JobPostingController;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingCreateReq;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingDto;
@@ -58,6 +59,7 @@ public class JobPostingServiceControllerTest {
               "springboot,java",
               "/img/icon_spring.png",
               0,
+              JobPostingStatus.ACTIVE,
               LocalDateTime.now()
       );
     }
@@ -122,6 +124,7 @@ public class JobPostingServiceControllerTest {
               defaultRequest.get("stack"),
               defaultRequest.get("icon"),
               0,
+              JobPostingStatus.ACTIVE,
               LocalDateTime.now()
       );
     }

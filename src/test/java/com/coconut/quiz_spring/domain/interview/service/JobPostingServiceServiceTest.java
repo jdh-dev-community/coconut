@@ -1,5 +1,6 @@
 package com.coconut.quiz_spring.domain.interview.service;
 
+import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingStatus;
 import com.coconut.quiz_spring.domain.jobposting.domain.JobPosting;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingCreateReq;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingDto;
@@ -65,6 +66,7 @@ public class JobPostingServiceServiceTest {
               .stack(jobPostingData.get("stack"))
               .icon(jobPostingData.get("icon"))
               .viewCount(0)
+              .status(JobPostingStatus.ACTIVE)
               .build();
 
       savedJobPosting = jobPostingRepository.save(jobPosting);
@@ -93,6 +95,7 @@ public class JobPostingServiceServiceTest {
       assertEquals(savedJobPosting.getStack(), result.getStack());
       assertEquals(savedJobPosting.getIcon(), result.getIcon());
       assertEquals(savedJobPosting.getViewCount() + 1, result.getViewCount());
+      assertEquals(savedJobPosting.getStatus(), JobPostingStatus.ACTIVE);
       assertThat(result.getUpdatedAt()).isNotNull();
     }
 
@@ -162,6 +165,7 @@ public class JobPostingServiceServiceTest {
       assertEquals(longDataDto.getStack(), result.getStack());
       assertEquals(longDataDto.getIcon(), result.getIcon());
       assertEquals(0, result.getViewCount());
+      assertEquals(JobPostingStatus.ACTIVE.getValue(), result.getStatus());
       assertThat(result.getUpdatedAt()).isNotNull();
     }
 
@@ -176,6 +180,7 @@ public class JobPostingServiceServiceTest {
       assertEquals(createDto.getStack(), result.getStack());
       assertEquals(createDto.getIcon(), result.getIcon());
       assertEquals(0, result.getViewCount());
+      assertEquals(JobPostingStatus.ACTIVE.getValue(), result.getStatus());
       assertThat(result.getUpdatedAt()).isNotNull();
     }
 

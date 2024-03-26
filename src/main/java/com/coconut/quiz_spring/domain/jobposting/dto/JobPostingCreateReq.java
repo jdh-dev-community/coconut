@@ -1,5 +1,6 @@
 package com.coconut.quiz_spring.domain.jobposting.dto;
 
+import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -32,6 +33,8 @@ public class JobPostingCreateReq {
   @NotBlank(message = "자격요건은 필수 입력 값입니다.")
   private String icon;
 
+  private final JobPostingStatus status = JobPostingStatus.ACTIVE;
+
   public static JobPostingCreateReq of (String title, String requirements, String preferred, String stack, String icon) {
     return JobPostingCreateReq.builder()
             .title(title)
@@ -50,6 +53,7 @@ public class JobPostingCreateReq {
             ", preferred='" + preferred + '\'' +
             ", stack='" + stack + '\'' +
             ", icon='" + icon + '\'' +
+            ", status=" + status +
             '}';
   }
 }

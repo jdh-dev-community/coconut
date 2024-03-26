@@ -1,6 +1,7 @@
 package com.coconut.quiz_spring.domain.jobposting.domain;
 
 import com.coconut.quiz_spring.common.domain.BaseEntity;
+import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -48,12 +49,21 @@ public class JobPosting extends BaseEntity {
   @Column(name = "view_count")
   private long viewCount;
 
+  @Schema(description = "상태", example = "active(노출), inactive(비노출), deleted(삭제)")
+  @Column(name = "status")
+  private String status;
+
+
   public void updateViewCount(long updatedViewCount) {
     this.viewCount = updatedViewCount;
   }
 
+  public JobPostingStatus getStatus() {
+    return JobPostingStatus.findBy(status);
+  }
+
   @Builder
-  public JobPosting(long jobPostingId, String title, String requirements, String preferred, String stack, String icon, long viewCount) {
+  public JobPosting(long jobPostingId, String title, String requirements, String preferred, String stack, String icon, long viewCount, JobPostingStatus status) {
     this.jobPostingId = jobPostingId;
     this.title = title;
     this.requirements = requirements;
@@ -61,5 +71,6 @@ public class JobPosting extends BaseEntity {
     this.stack = stack;
     this.icon = icon;
     this.viewCount = viewCount;
+    this.status = status.getValue();
   }
 }

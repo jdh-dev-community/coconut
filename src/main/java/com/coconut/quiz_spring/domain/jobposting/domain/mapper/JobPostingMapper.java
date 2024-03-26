@@ -1,5 +1,6 @@
 package com.coconut.quiz_spring.domain.jobposting.domain.mapper;
 
+import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingStatus;
 import com.coconut.quiz_spring.domain.jobposting.domain.JobPosting;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingCreateReq;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ public class JobPostingMapper {
             .stack(dto.getStack())
             .icon(dto.getIcon())
             .viewCount(0)
+            .status(dto.getStatus())
             .build();
   }
 }

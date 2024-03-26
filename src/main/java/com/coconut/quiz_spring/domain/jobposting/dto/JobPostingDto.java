@@ -1,5 +1,6 @@
 package com.coconut.quiz_spring.domain.jobposting.dto;
 
+import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingStatus;
 import com.coconut.quiz_spring.domain.jobposting.domain.JobPosting;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -34,10 +35,13 @@ public class JobPostingDto {
   @Schema(description = "조회수", example = "100")
   private long viewCount;
 
+  @Schema(description = "상태", example = "active, inactive, deleted")
+  private String status;
+
   @Schema(description = "최근 수정일", example = "2023-01-01T12:00:00")
   private LocalDateTime updatedAt;
 
-  public static JobPostingDto of (long jobPostingId, String title, String requirements, String preferred, String stack, String icon, long viewCount, LocalDateTime updatedAt) {
+  public static JobPostingDto of (long jobPostingId, String title, String requirements, String preferred, String stack, String icon, long viewCount, JobPostingStatus status, LocalDateTime updatedAt) {
     return JobPostingDto.builder()
             .jobPostingId(jobPostingId)
             .title(title)
@@ -46,6 +50,7 @@ public class JobPostingDto {
             .stack(stack)
             .icon(icon)
             .viewCount(viewCount)
+            .status(status.getValue())
             .updatedAt(updatedAt)
             .build();
   }
@@ -59,6 +64,7 @@ public class JobPostingDto {
             jobPosting.getStack(),
             jobPosting.getIcon(),
             jobPosting.getViewCount(),
+            jobPosting.getStatus(),
             jobPosting.getUpdatedAt()
     );
   }
@@ -72,6 +78,8 @@ public class JobPostingDto {
             ", preferred='" + preferred + '\'' +
             ", stack='" + stack + '\'' +
             ", icon='" + icon + '\'' +
+            ", viewCount=" + viewCount +
+            ", status=" + status +
             ", updatedAt=" + updatedAt +
             '}';
   }

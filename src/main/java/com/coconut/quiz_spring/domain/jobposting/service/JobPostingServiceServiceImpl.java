@@ -36,8 +36,8 @@ public class JobPostingServiceServiceImpl implements JobPostingService {
   @Transactional
   @Override
   public JobPostingDto getJobPosting(long jobPostingId) {
-    JobPosting jobPosting = jobPostingRepository.findByIdWithLock(jobPostingId)
-            .orElseThrow(() -> new EntityNotFoundException());
+    JobPosting jobPosting = jobPostingRepository.findByIdWithPessimisticRead(jobPostingId)
+            .orElseThrow(() -> new EntityNotFoundException("해당 id와 일치하는 공고가 없습니다. id: " + jobPostingId));
 
     jobPosting.updateViewCount(jobPosting.getViewCount() + 1);
 

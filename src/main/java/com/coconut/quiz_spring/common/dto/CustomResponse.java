@@ -10,11 +10,11 @@ public class CustomResponse<T> {
   private T result;
   private HttpErrorInfo error;
 
-  public static <T> CustomResponse of (T data) {
-    return new CustomResponse(data, null);
+  public static <T> CustomResponse<T> of (T data) {
+    return new CustomResponse<>(data, null);
   }
 
-  public static <T> CustomResponse of (HttpErrorInfo error) {
-    return new CustomResponse(null, error);
+  public static CustomResponse<HttpErrorInfo> of (HttpErrorInfo error) {
+    return new CustomResponse<>(null, error);
   }
 }

@@ -24,6 +24,7 @@ public class JobPostingController {
   @GetMapping("/jobposting")
   public void getJobPostingList() {}
 
+  @Operation(summary = "채용공고 조회", description = "채용공고를 조회합니다.")
   @GetMapping("/jobposting/{id}")
   public CustomResponse<JobPostingDto> getJobPosting(@PathVariable("id") long jobPostingId) {
     JobPostingDto result = jobPostingService.getJobPosting(jobPostingId);
@@ -46,6 +47,14 @@ public class JobPostingController {
   @PatchMapping("/jobposting")
   public void editJobPosting() {}
 
-  @DeleteMapping("/jobposting")
-  public void deleteJobPosting() {}
+  @Operation(summary = "채용공고 삭제", description = "채용공고를 삭제합니다.")
+  @ResponseStatus(HttpStatus.OK)
+  @DeleteMapping("/jobposting/{id}")
+  public CustomResponse<JobPostingDto> deleteJobPosting(@PathVariable("id") long jobPostingId) {
+    JobPostingDto result = jobPostingService.deleteJobPosting(jobPostingId);
+    CustomResponse<JobPostingDto> response = CustomResponse.of(result);
+
+    return response;
+
+  }
 }

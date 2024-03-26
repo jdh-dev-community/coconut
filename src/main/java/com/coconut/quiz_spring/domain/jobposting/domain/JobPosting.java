@@ -58,8 +58,13 @@ public class JobPosting extends BaseEntity {
     this.viewCount = updatedViewCount;
   }
 
+
   public JobPostingStatus getStatus() {
     return JobPostingStatus.findBy(status);
+  }
+
+  public void updateStatus(JobPostingStatus status) {
+    this.status = status.getValue();
   }
 
   @Builder

@@ -18,8 +18,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.constraints.Null;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -165,7 +174,7 @@ public class JobPostingServiceServiceTest {
       assertEquals(longDataDto.getStack(), result.getStack());
       assertEquals(longDataDto.getIcon(), result.getIcon());
       assertEquals(0, result.getViewCount());
-      assertEquals(JobPostingStatus.ACTIVE.getValue(), result.getStatus());
+      assertEquals(JobPostingStatus.ACTIVE, result.getStatus());
       assertThat(result.getUpdatedAt()).isNotNull();
     }
 
@@ -180,7 +189,7 @@ public class JobPostingServiceServiceTest {
       assertEquals(createDto.getStack(), result.getStack());
       assertEquals(createDto.getIcon(), result.getIcon());
       assertEquals(0, result.getViewCount());
-      assertEquals(JobPostingStatus.ACTIVE.getValue(), result.getStatus());
+      assertEquals(JobPostingStatus.ACTIVE, result.getStatus());
       assertThat(result.getUpdatedAt()).isNotNull();
     }
 
@@ -194,4 +203,98 @@ public class JobPostingServiceServiceTest {
     }
 
   }
+
+  @Nested
+  class 채용공고삭제_테스트 {
+    private JobPosting savedJobPosting;
+
+    @BeforeEach
+    public void setup() {
+      JobPosting jobPosting = JobPosting.builder()
+              .jobPostingId(1)
+              .title(jobPostingData.get("title"))
+              .requirements(jobPostingData.get("requirements"))
+              .preferred(jobPostingData.get("preferred"))
+              .stack(jobPostingData.get("stack"))
+              .icon(jobPostingData.get("icon"))
+              .viewCount(0)
+              .status(JobPostingStatus.ACTIVE)
+              .build();
+
+      savedJobPosting = jobPostingRepository.save(jobPosting);
+    }
+
+    @AfterEach
+    public void cleanup() {
+      jobPostingRepository.deleteAll();
+    }
+
+    @Test
+    public void 주어진Id와_매칭되는_공고가_없는_경우_EntityNotFoundException() {
+      long notMatchedId = -1;
+      assertThrows(EntityNotFoundException.class, () -> jobPostingService.deleteJobPosting(notMatchedId));
+    }
+
+    @Test
+    public void 주어진Id와_매칭되는_공고가_있는_경우_stauts를_DELETED로_변경() {
+      long matchedId = savedJobPosting.getJobPostingId();
+      JobPostingDto result = jobPostingService.deleteJobPosting(matchedId);
+      JobPosting jobposting = jobPostingRepository.findById(matchedId)
+              .orElseThrow(() -> new EntityNotFoundException());
+
+
+      assertEquals(JobPostingStatus.DELETED, result.getStatus());
+      assertEquals(jobposting.getStatus(), result.getStatus());
+    }
+
+    @Test
+    public void 주어진Id와_매칭되는_공고가_있는_경우_status_변경_후_JobPostingDto_반환() {
+      long matchedId = savedJobPosting.getJobPostingId();
+      JobPostingDto result = jobPostingService.deleteJobPosting(matchedId);
+
+      assertEquals(savedJobPosting.getJobPostingId(), result.getJobPostingId());
+      assertEquals(savedJobPosting.getTitle(), result.getTitle());
+      assertEquals(savedJobPosting.getRequirements(), result.getRequirements());
+      assertEquals(savedJobPosting.getPreferred(), result.getPreferred());
+      assertEquals(savedJobPosting.getStack(), result.getStack());
+      assertEquals(savedJobPosting.getIcon(), result.getIcon());
+      assertEquals(savedJobPosting.getViewCount(), result.getViewCount());
+      assertEquals(JobPostingStatus.DELETED, result.getStatus());
+      assertThat(result.getUpdatedAt()).isNotNull();
+    }
+
+    @Test
+    public void 여러개의_쓰레드에서_삭제를_시도할_경우_1번만_삭제되고_나머지는_예외를_반환한다() {
+      long matchedId = savedJobPosting.getJobPostingId();
+
+      int threadCount = 10;
+      ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+
+      List<Future<JobPostingDto>> futures = IntStream.range(0, threadCount)
+              .mapToObj((num) -> executor.submit(() -> jobPostingService.deleteJobPosting(matchedId)))
+              .collect(Collectors.toList());
+
+      executor.shutdown();
+
+      int success = 0;
+      int fail = 0;
+      for (Future<JobPostingDto> future : futures) {
+        try {
+          future.get();
+          success += 1;
+        } catch (ExecutionException | InterruptedException e) {
+          fail += 1;
+        }
+      }
+
+      assertEquals(1, success);
+      assertEquals(threadCount - success, fail);
+
+    }
+  }
+
+
+
+
+
 }

@@ -24,8 +24,7 @@ import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -179,5 +178,61 @@ public class JobPostingServiceControllerTest {
     }
   }
 
+  @Nested
+  class 채용공고삭제_테스트 {
+    private JobPostingDto jobPostingDto;
+
+    @BeforeEach
+    public void setup() {
+      this.jobPostingDto = JobPostingDto.of(
+              1,
+              "테스트 면접",
+              "자바 스프링 프레임워크(Spring Framework)를 이용한 개발 경험 \n 자바(Java) 프로그래밍 언어에 대한 실무 지식 \n 스프링 부트(Spring Boot)를 이용한 RESTful API 개발 경험 \n 객체 지향 프로그래밍(OOP) 원칙에 대한 이해 \n MySQL, PostgreSQL, MongoDB 등의 데이터베이스 관리 시스템에 대한 이해와 경험",
+              "클라우드 서비스(AWS, Azure, Google Cloud Platform) 경험\n 컨테이너화 도구(Docker, Kubernetes) 사용 경험\n CI/CD 파이프라인 구축 경험",
+              "springboot,java",
+              "/img/icon_spring.png",
+              0,
+              JobPostingStatus.DELETED,
+              LocalDateTime.now()
+      );
+    }
+
+    @Test
+    public void 채용공고Id가_숫자로_변환이_안되는_경우_400을_응답() throws Exception {
+      String invalidId = "invalid";
+
+      mockMvc.perform(delete(baseUrl + "/" + invalidId))
+              .andExpect(status().isBadRequest())
+              .andExpect(jsonPath("$.result").isEmpty())
+              .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
+    public void 채용공고Id에_매칭되는_채용공고가_없는_경우_400을_응답() throws Exception {
+      String notMatched = "-1";
+
+      when(jobPostingService.deleteJobPosting(Long.parseLong(notMatched)))
+              .thenThrow(EntityNotFoundException.class);
+
+      mockMvc.perform(delete(baseUrl + "/" + notMatched))
+              .andExpect(status().isNotFound())
+              .andExpect(jsonPath("$.result").isEmpty())
+              .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
+    public void 채용공고Id에_매칭되는_삭제가능한_채용공고가_있는_경우_삭제처리_후_채용공고와_200을_응답() throws Exception {
+      String matched = "1";
+
+      when(jobPostingService.deleteJobPosting(Long.parseLong(matched)))
+              .thenReturn(jobPostingDto);
+
+      mockMvc.perform(delete(baseUrl + "/" + matched))
+              .andExpect(status().isOk())
+              .andExpect(jsonPath("$.result").isNotEmpty())
+              .andExpect(jsonPath("$.error").isEmpty());
+    }
+
+  }
 
 }

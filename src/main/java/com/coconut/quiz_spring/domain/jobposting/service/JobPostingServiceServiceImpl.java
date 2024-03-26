@@ -1,5 +1,6 @@
 package com.coconut.quiz_spring.domain.jobposting.service;
 
+import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingStatus;
 import com.coconut.quiz_spring.domain.jobposting.domain.JobPosting;
 import com.coconut.quiz_spring.domain.jobposting.domain.mapper.JobPostingMapper;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingCreateReq;
@@ -51,7 +52,14 @@ public class JobPostingServiceServiceImpl implements JobPostingService {
 
 
 
+  @Transactional
   @Override
-  public void deleteJobPosting(long jobPostingId) {
+  public JobPostingDto deleteJobPosting(long jobPostingId) {
+    JobPosting jobPosting = jobPostingRepository.findByIdWithPessimisticWrite(jobPostingId)
+            .orElseThrow(() -> new EntityNotFoundException());
+
+    jobPosting.updateStatus(JobPostingStatus.DELETED);
+
+    return JobPostingDto.from(jobPosting);
   }
 }

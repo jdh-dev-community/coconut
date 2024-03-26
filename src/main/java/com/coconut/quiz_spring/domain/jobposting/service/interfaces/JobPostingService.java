@@ -14,6 +14,6 @@ public interface JobPostingService {
 
   JobPostingDto getJobPosting(long jobPostingId);
 
-  void deleteJobPosting(long jobPostingId);
+  JobPostingDto deleteJobPosting(long jobPostingId);
 
 }

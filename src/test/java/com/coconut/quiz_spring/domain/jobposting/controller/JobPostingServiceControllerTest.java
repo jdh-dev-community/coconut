@@ -1,11 +1,10 @@
-package com.coconut.quiz_spring.domain.interview.controller;
+package com.coconut.quiz_spring.domain.jobposting.controller;
 
 import com.coconut.quiz_spring.common.constant.OrderBy;
 import com.coconut.quiz_spring.common.constant.SortBy;
 import com.coconut.quiz_spring.common.dto.ListReqDto;
 import com.coconut.quiz_spring.common.dto.ListResDto;
 import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingStatus;
-import com.coconut.quiz_spring.domain.jobposting.controller.JobPostingController;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingCreateReq;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingDto;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingEditReq;

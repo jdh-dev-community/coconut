@@ -1,4 +1,4 @@
-package com.coconut.quiz_spring.domain.interview.service;
+package com.coconut.quiz_spring.domain.jobposting.service;
 
 import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingAction;
 import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingStatus;

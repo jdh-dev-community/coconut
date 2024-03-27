@@ -1,4 +1,4 @@
-package com.coconut.quiz_spring.domain.interview.service;
+package com.coconut.quiz_spring.domain.jobposting.service;
 
 import com.coconut.quiz_spring.common.constant.OrderBy;
 import com.coconut.quiz_spring.common.constant.SortBy;

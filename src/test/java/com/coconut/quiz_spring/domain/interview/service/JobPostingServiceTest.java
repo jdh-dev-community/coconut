@@ -1,5 +1,9 @@
 package com.coconut.quiz_spring.domain.interview.service;
 
+import com.coconut.quiz_spring.common.constant.OrderBy;
+import com.coconut.quiz_spring.common.constant.SortBy;
+import com.coconut.quiz_spring.common.dto.ListReqDto;
+import com.coconut.quiz_spring.common.dto.ListResDto;
 import com.coconut.quiz_spring.common.utils.CustomObjectMapper;
 import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingAction;
 import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingStatus;
@@ -10,22 +14,18 @@ import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingDto;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingEditReq;
 import com.coconut.quiz_spring.domain.jobposting.repository.JobPostingHistoryRepository;
 import com.coconut.quiz_spring.domain.jobposting.repository.JobPostingRepository;
-import com.coconut.quiz_spring.domain.jobposting.service.interfaces.JobPostingHistoryService;
 import com.coconut.quiz_spring.domain.jobposting.service.interfaces.JobPostingService;
 import com.coconut.quiz_spring.testUtils.ConcurrencyTestUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.persistence.EntityNotFoundException;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -34,12 +34,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -76,17 +74,7 @@ public class JobPostingServiceTest {
 
     @BeforeEach
     public void setup() {
-      JobPosting jobPosting = JobPosting.builder()
-              .jobPostingId(1)
-              .title(jobPostingData.get("title"))
-              .requirements(jobPostingData.get("requirements"))
-              .preferred(jobPostingData.get("preferred"))
-              .stack(jobPostingData.get("stack"))
-              .icon(jobPostingData.get("icon"))
-              .viewCount(0)
-              .status(JobPostingStatus.ACTIVE)
-              .build();
-
+      JobPosting jobPosting = createJobPosting(jobPostingData.get("title"));
       savedJobPosting = jobPostingRepository.save(jobPosting);
     }
 
@@ -234,17 +222,7 @@ public class JobPostingServiceTest {
 
     @BeforeEach
     public void setup() {
-      JobPosting jobPosting = JobPosting.builder()
-              .jobPostingId(1)
-              .title(jobPostingData.get("title"))
-              .requirements(jobPostingData.get("requirements"))
-              .preferred(jobPostingData.get("preferred"))
-              .stack(jobPostingData.get("stack"))
-              .icon(jobPostingData.get("icon"))
-              .viewCount(0)
-              .status(JobPostingStatus.ACTIVE)
-              .build();
-
+      JobPosting jobPosting = createJobPosting(jobPostingData.get("title"));
       savedJobPosting = jobPostingRepository.save(jobPosting);
 
       this.editDto = JobPostingEditReq.of(
@@ -430,8 +408,184 @@ public class JobPostingServiceTest {
     }
   }
 
+  @Nested
+  class 채용공고목록_조회_테스트 {
+
+    private int TOTAL_ITEM_COUNT = 40;
 
 
+    @BeforeEach
+    public void setup() {
+      List<JobPosting> list = createJobPostingList(TOTAL_ITEM_COUNT);
+      jobPostingRepository.saveAll(list);
+    }
 
+    @AfterEach
+    public void cleanup() {
+      jobPostingRepository.deleteAll();
+    }
+
+    @Test
+    public void 조회된_채용공고의_숫자는_페이지_사이즈와_작거나_같다() {
+      ListReqDto listReqDto = ListReqDto.of(1, 10, SortBy.RECENT, OrderBy.DESC, null);
+
+      ListResDto<JobPostingDto> size10List = jobPostingService.getJobPostingList(listReqDto);
+      assertThat(size10List.getContent().size()).isLessThanOrEqualTo(listReqDto.getSize());
+
+      jobPostingRepository.deleteAll();
+      List<JobPosting> list = createJobPostingList(3);
+      jobPostingRepository.saveAll(list);
+
+      ListResDto<JobPostingDto> size3List = jobPostingService.getJobPostingList(listReqDto);
+      assertThat(size3List.getContent().size()).isLessThanOrEqualTo(listReqDto.getSize());
+    }
+
+    @Test
+    public void 조회된_채용공는_페이지와_사이즈를_사용해서_페이징처리를_한다() {
+      ListReqDto firstPageReq = ListReqDto.of(1, 3, SortBy.RECENT, OrderBy.DESC, null);
+      ListResDto<JobPostingDto> firstPage = jobPostingService.getJobPostingList(firstPageReq);
+      JobPostingDto firstPageLastItem = firstPage.getContent().get(firstPage.getContent().size() - 1);
+
+      ListReqDto secondPageReq = ListReqDto.of(2, 3, SortBy.RECENT, OrderBy.DESC, null);
+      ListResDto<JobPostingDto> secondPage = jobPostingService.getJobPostingList(secondPageReq);
+      JobPostingDto secondPageFirstItem = secondPage.getContent().get(0);
+
+      assertEquals(firstPageLastItem.getJobPostingId(), secondPageFirstItem.getJobPostingId() + 1);
+    }
+
+    @Test
+    public void 정렬기준이_RECENT일_경우_수정일_기준으로_정렬한다() {
+      ListReqDto firstPageReq = ListReqDto.of(1, 10, SortBy.RECENT, OrderBy.DESC, null);
+      ListResDto<JobPostingDto> page = jobPostingService.getJobPostingList(firstPageReq);
+
+      JobPostingDto firstItem = page.getContent().get(0);
+      JobPostingDto secondItem = page.getContent().get(1);
+      JobPostingDto thirdItem = page.getContent().get(2);
+
+      assertThat(firstItem.getUpdatedAt()).isAfter(secondItem.getUpdatedAt());
+      assertThat(secondItem.getUpdatedAt()).isAfter(thirdItem.getUpdatedAt());
+    }
+
+    @Test
+    public void OrderBy가_ASC일_경우_수정일_기준으로_오름차순_정렬한다() {
+      ListReqDto firstPageReq = ListReqDto.of(1, 10, SortBy.RECENT, OrderBy.ASC, null);
+      ListResDto<JobPostingDto> page = jobPostingService.getJobPostingList(firstPageReq);
+
+      JobPostingDto firstItem = page.getContent().get(0);
+      JobPostingDto secondItem = page.getContent().get(1);
+      JobPostingDto thirdItem = page.getContent().get(2);
+
+      assertThat(firstItem.getUpdatedAt()).isBefore(secondItem.getUpdatedAt());
+      assertThat(secondItem.getUpdatedAt()).isBefore(thirdItem.getUpdatedAt());
+    }
+
+    @Test
+    public void 검색어가_있는_경우_제목_혹은_스택을_기준으로_매칭되는_모든_채용공고를_조회한다() {
+
+      String searchKeyword = "검색키워드";
+      JobPosting jobPosting = JobPosting.builder()
+              .title(searchKeyword + "제목입니다.")
+              .requirements(jobPostingData.get("requirements"))
+              .preferred(jobPostingData.get("preferred"))
+              .stack(searchKeyword + "스택입니다.")
+              .icon(jobPostingData.get("icon"))
+              .viewCount(0)
+              .status(JobPostingStatus.ACTIVE)
+              .build();
+
+      JobPosting savedJobPosting = jobPostingRepository.save(jobPosting);
+
+      ListReqDto withSearch = ListReqDto.of(1, 10, SortBy.RECENT, OrderBy.ASC, searchKeyword);
+      ListResDto<JobPostingDto> searchedPage = jobPostingService.getJobPostingList(withSearch);
+
+      assertEquals(savedJobPosting.getJobPostingId(), searchedPage.getContent().get(0).getJobPostingId());
+    }
+
+    @Test
+    public void 검색어가_있는_경우_제목을_기준으로_매칭되는_모든_채용공고를_조회한다() {
+
+      String searchKeyword = "검색키워드";
+      JobPosting jobPosting = JobPosting.builder()
+              .title(searchKeyword + "제목입니다.")
+              .requirements(jobPostingData.get("requirements"))
+              .preferred(jobPostingData.get("preferred"))
+              .stack(jobPostingData.get("stack"))
+              .icon(jobPostingData.get("icon"))
+              .viewCount(0)
+              .status(JobPostingStatus.ACTIVE)
+              .build();
+
+      JobPosting savedJobPosting = jobPostingRepository.save(jobPosting);
+
+      ListReqDto withSearch = ListReqDto.of(1, 10, SortBy.RECENT, OrderBy.ASC, searchKeyword);
+      ListResDto<JobPostingDto> searchedPage = jobPostingService.getJobPostingList(withSearch);
+
+      assertEquals(savedJobPosting.getJobPostingId(), searchedPage.getContent().get(0).getJobPostingId());
+    }
+
+    @Test
+    public void 검색어가_있는_경우_스택을_기준으로_매칭되는_모든_채용공고를_조회한다() {
+
+      String searchKeyword = "검색키워드";
+      JobPosting jobPosting = JobPosting.builder()
+              .title(jobPostingData.get("title"))
+              .requirements(jobPostingData.get("requirements"))
+              .preferred(jobPostingData.get("preferred"))
+              .stack("여기는 스택" + searchKeyword)
+              .icon(jobPostingData.get("icon"))
+              .viewCount(0)
+              .status(JobPostingStatus.ACTIVE)
+              .build();
+
+      JobPosting savedJobPosting = jobPostingRepository.save(jobPosting);
+
+      ListReqDto withSearch = ListReqDto.of(1, 10, SortBy.RECENT, OrderBy.ASC, searchKeyword);
+      ListResDto<JobPostingDto> searchedPage = jobPostingService.getJobPostingList(withSearch);
+
+      assertEquals(savedJobPosting.getJobPostingId(), searchedPage.getContent().get(0).getJobPostingId());
+    }
+
+    @Test
+    public void 검색어가_있지만_제목과_스택에_매칭되지않는다면_채용공고를_조회하지_않는다() {
+
+      String searchKeyword = "검색키워드";
+      JobPosting jobPosting = JobPosting.builder()
+              .title(jobPostingData.get("title"))
+              .requirements("제목과 스택에만 검색이 걸립니다" + searchKeyword)
+              .preferred(jobPostingData.get("preferred"))
+              .stack(jobPostingData.get("stack"))
+              .icon(jobPostingData.get("icon"))
+              .viewCount(0)
+              .status(JobPostingStatus.ACTIVE)
+              .build();
+
+      JobPosting savedJobPosting = jobPostingRepository.save(jobPosting);
+
+      ListReqDto withSearch = ListReqDto.of(1, 10, SortBy.RECENT, OrderBy.ASC, searchKeyword);
+      ListResDto<JobPostingDto> searchedPage = jobPostingService.getJobPostingList(withSearch);
+
+      assertEquals(0, searchedPage.getContent().size());
+    }
+
+
+    private List<JobPosting> createJobPostingList(int count) {
+      return LongStream.rangeClosed(1, count)
+              .mapToObj((i) -> createJobPosting("제목" + i))
+              .collect(Collectors.toList());
+    }
+
+  }
+
+  private JobPosting createJobPosting(String title) {
+    return JobPosting.builder()
+            .title(title)
+            .requirements(jobPostingData.get("requirements"))
+            .preferred(jobPostingData.get("preferred"))
+            .stack(jobPostingData.get("stack"))
+            .icon(jobPostingData.get("icon"))
+            .viewCount(0)
+            .status(JobPostingStatus.ACTIVE)
+            .build();
+  }
 
 }

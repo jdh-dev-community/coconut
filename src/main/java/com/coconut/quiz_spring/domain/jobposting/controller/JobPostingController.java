@@ -1,7 +1,8 @@
 package com.coconut.quiz_spring.domain.jobposting.controller;
 
-
 import com.coconut.quiz_spring.common.dto.CustomResponse;
+import com.coconut.quiz_spring.common.dto.ListReqDto;
+import com.coconut.quiz_spring.common.dto.ListResDto;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingCreateReq;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingDto;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingEditReq;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -22,10 +24,19 @@ public class JobPostingController {
 
   private final JobPostingService jobPostingService;
 
-  @GetMapping("/jobposting")
-  public void getJobPostingList() {}
+
+  @Operation(summary = "채용공고 목록 조회", description = "채용공고 목록을 조회합니다.")
+  @ResponseStatus(HttpStatus.OK)
+  @GetMapping("/jobpostings")
+  public CustomResponse<ListResDto<JobPostingDto>> getJobPostingList(@Valid @ModelAttribute ListReqDto listReqDto) {
+    ListResDto<JobPostingDto> result = jobPostingService.getJobPostingList(listReqDto);
+    CustomResponse<ListResDto<JobPostingDto>> response = CustomResponse.of(result);
+
+    return response;
+  }
 
   @Operation(summary = "채용공고 조회", description = "채용공고를 조회합니다.")
+  @ResponseStatus(HttpStatus.OK)
   @GetMapping("/jobposting/{id}")
   public CustomResponse<JobPostingDto> getJobPosting(@PathVariable("id") long jobPostingId) {
     JobPostingDto result = jobPostingService.getJobPosting(jobPostingId);

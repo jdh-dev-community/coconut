@@ -1,5 +1,9 @@
 package com.coconut.quiz_spring.domain.interview.controller;
 
+import com.coconut.quiz_spring.common.constant.OrderBy;
+import com.coconut.quiz_spring.common.constant.SortBy;
+import com.coconut.quiz_spring.common.dto.ListReqDto;
+import com.coconut.quiz_spring.common.dto.ListResDto;
 import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingStatus;
 import com.coconut.quiz_spring.domain.jobposting.controller.JobPostingController;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingCreateReq;
@@ -20,11 +24,13 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -65,17 +71,7 @@ public class JobPostingServiceControllerTest {
 
     @BeforeEach
     public void setup() {
-      this.jobPostingDto = JobPostingDto.of(
-              1,
-              defaultRequest.get("title"),
-              defaultRequest.get("requirements"),
-              defaultRequest.get("preferred"),
-              defaultRequest.get("stack"),
-              defaultRequest.get("icon"),
-              1,
-              JobPostingStatus.ACTIVE,
-              LocalDateTime.now()
-      );
+      this.jobPostingDto = createJobPostingDto(1);
     }
 
     @Test
@@ -121,17 +117,7 @@ public class JobPostingServiceControllerTest {
 
     @BeforeEach
     public void setup() {
-      this.jobPostingDto = JobPostingDto.of(
-              1,
-              defaultRequest.get("title"),
-              defaultRequest.get("requirements"),
-              defaultRequest.get("preferred"),
-              defaultRequest.get("stack"),
-              defaultRequest.get("icon"),
-              0,
-              JobPostingStatus.ACTIVE,
-              LocalDateTime.now()
-      );
+      this.jobPostingDto = createJobPostingDto(1);
     }
 
     @Test
@@ -172,7 +158,8 @@ public class JobPostingServiceControllerTest {
       postAndVerify(validBody)
               .andExpect(status().isCreated())
               .andExpect(jsonPath("$.result").isNotEmpty())
-              .andExpect(jsonPath("$.error").isEmpty());;
+              .andExpect(jsonPath("$.error").isEmpty());
+      ;
 
     }
 
@@ -190,18 +177,7 @@ public class JobPostingServiceControllerTest {
 
     @BeforeEach
     public void setup() {
-
-      this.jobPostingDto = JobPostingDto.of(
-              1,
-              defaultRequest.get("title"),
-              defaultRequest.get("requirements"),
-              defaultRequest.get("preferred"),
-              defaultRequest.get("stack"),
-              defaultRequest.get("icon"),
-              0,
-              JobPostingStatus.ACTIVE,
-              LocalDateTime.now()
-      );
+      this.jobPostingDto = createJobPostingDto(1);
     }
 
     @Test
@@ -228,7 +204,10 @@ public class JobPostingServiceControllerTest {
     @Test
     public void 요청_데이터가_유효한_경우_수정된_채용공고와_200_응답을_반환() throws Exception {
       String matchId = "1";
-      Map<String, String> validRequest = Map.of("title", defaultRequest.get("title"));
+      Map<String, String> validRequest = Map.of(
+              "title", defaultRequest.get("title"),
+              "status", "active"
+      );
       String validBody = objectMapper.writeValueAsString(validRequest);
 
       when(jobPostingService.editJobPosting(eq(Long.parseLong(matchId)), any(JobPostingEditReq.class)))
@@ -237,7 +216,8 @@ public class JobPostingServiceControllerTest {
       patchAndVerify(matchId, validBody)
               .andExpect(status().isOk())
               .andExpect(jsonPath("$.result").isNotEmpty())
-              .andExpect(jsonPath("$.error").isEmpty());;
+              .andExpect(jsonPath("$.error").isEmpty());
+      ;
 
     }
 
@@ -255,17 +235,7 @@ public class JobPostingServiceControllerTest {
 
     @BeforeEach
     public void setup() {
-      this.jobPostingDto = JobPostingDto.of(
-              1,
-              defaultRequest.get("title"),
-              defaultRequest.get("requirements"),
-              defaultRequest.get("preferred"),
-              defaultRequest.get("stack"),
-              defaultRequest.get("icon"),
-              0,
-              JobPostingStatus.DELETED,
-              LocalDateTime.now()
-      );
+      this.jobPostingDto = createJobPostingDto(1);
     }
 
     @Test
@@ -306,4 +276,157 @@ public class JobPostingServiceControllerTest {
 
   }
 
+  @Nested
+  class 채용공고목록_조회_테스트 {
+    private String url = "/api/v1/jobpostings";
+    private final int DEFAULT_PAGE_NUMBER = 1;
+    private final int DEFAULT_PAGE_SIZE = 10;
+    private final int MAX_PAGE_SIZE = 30;
+    private final String DEFAULT_SORT_FIELD = "updatedAt";
+    private final SortBy DEFAULT_SORT = SortBy.RECENT;
+    private final OrderBy DEFAULT_ORDER = OrderBy.DESC;
+
+    @Test
+    public void 페이지_번호가_없는_경우_1을_기본값으로_사용한다() throws Exception {
+      mockMvc.perform(get(url))
+              .andExpect(status().isOk());
+
+      verify(jobPostingService).getJobPostingList(
+              argThat(listReqDto -> listReqDto.getPage() == DEFAULT_PAGE_NUMBER)
+      );
+    }
+
+    @Test
+    public void 최소_페이지_번호는_1_이다_1미만은_400_응답을_한다() throws Exception {
+      mockMvc.perform(get(url).param("page", "0"))
+              .andExpect(status().isBadRequest())
+              .andExpect(jsonPath("$.result").isEmpty())
+              .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
+    public void 페이지_사이즈가_없는_경우_10을_기본값으로_사용한다() throws Exception {
+      mockMvc.perform(get(url))
+              .andExpect(status().isOk());
+
+      verify(jobPostingService).getJobPostingList(
+              argThat(listReqDto -> listReqDto.getSize() == DEFAULT_PAGE_SIZE)
+      );
+    }
+
+    @Test
+    public void 페이지_사이즈는_최대_30을_넘지_않는다() throws Exception {
+
+      mockMvc.perform(get(url)
+              .param("page", "1")
+              .param("size", "60")
+      ).andExpect(status().isOk());
+
+      verify(jobPostingService).getJobPostingList(
+              argThat(listReqDto -> listReqDto.getSize() == MAX_PAGE_SIZE)
+      );
+    }
+
+    @Test
+    public void 정렬_기준이_없는_경우_updatedAt을_기준으로_사용한다() throws Exception {
+      mockMvc.perform(get(url))
+              .andExpect(status().isOk());
+
+      verify(jobPostingService).getJobPostingList(
+              argThat(listReqDto ->
+                      listReqDto.getSortBy().getFieldName() == DEFAULT_SORT_FIELD
+                              && listReqDto.getSortBy() == DEFAULT_SORT)
+      );
+    }
+
+    @Test
+    public void 잘못된_정렬기준을_포함한_경우_400_응답을_한다() throws Exception {
+      mockMvc.perform(get(url).param("sortBy", "random"))
+              .andExpect(status().isBadRequest())
+              .andExpect(jsonPath("$.result").isEmpty())
+              .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
+    public void 오름차순과_내림차순_기준이_없는_경우_DESC를_기준으로_사용한다() throws Exception {
+      mockMvc.perform(get(url))
+              .andExpect(status().isOk());
+
+      verify(jobPostingService).getJobPostingList(
+              argThat(listReqDto -> listReqDto.getOrderBy() == DEFAULT_ORDER)
+      );
+    }
+
+    @Test
+    public void 잘못된_오름차순과_내림차순_기준을_포함한_경우_400_응답을_한다() throws Exception {
+      mockMvc.perform(get(url).param("orderBy", "random"))
+              .andExpect(status().isBadRequest())
+              .andExpect(jsonPath("$.result").isEmpty())
+              .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
+    public void 검색어가_없는_경우_null_전달한다() throws Exception {
+      mockMvc.perform(get(url))
+              .andExpect(status().isOk());
+
+      verify(jobPostingService).getJobPostingList(
+              argThat(listReqDto -> Objects.isNull(listReqDto.getSearch()))
+      );
+    }
+
+    @Test
+    public void 요청에_전달된_param을_서비스에_전달한다() throws Exception {
+      mockMvc.perform(get(url)
+                      .param("page", DEFAULT_PAGE_NUMBER + "")
+                      .param("size", DEFAULT_PAGE_SIZE + "")
+                      .param("sortBy", "recent")
+                      .param("orderBy", "desc")
+                      .param("search", "keywords"))
+              .andExpect(status().isOk());
+
+      verify(jobPostingService).getJobPostingList(
+              argThat(listReqDto ->
+                      listReqDto.getPage() == DEFAULT_PAGE_NUMBER
+                              && listReqDto.getSize() == DEFAULT_PAGE_SIZE
+                              && listReqDto.getSortBy().getSort().equals("recent")
+                              && listReqDto.getOrderBy().getOrder().equals("desc")
+                              && listReqDto.getSearch().equals("keywords")));
+    }
+
+    @Test
+    public void 응답으로_채용공고_전체_숫자와_조회된_목록을_반환한다() throws Exception {
+      int elementsCount = 10;
+
+      List<JobPostingDto> dummyList = IntStream.rangeClosed(0, 3)
+              .mapToObj((i) -> createJobPostingDto(i))
+              .collect(Collectors.toList());
+
+      ListResDto<JobPostingDto> result = ListResDto.of(elementsCount, dummyList);
+
+      when(jobPostingService.getJobPostingList(any(ListReqDto.class))).thenReturn(result);
+
+      mockMvc.perform(get(url))
+              .andExpect(status().isOk())
+              .andExpect(jsonPath("$.result.elementsCount", is(elementsCount)))
+              .andExpect(jsonPath("$.result.content").isArray())
+              .andExpect(jsonPath("$.error").isEmpty());
+
+    }
+
+  }
+
+  private JobPostingDto createJobPostingDto(long id) {
+    return JobPostingDto.of(
+            id,
+            defaultRequest.get("title"),
+            defaultRequest.get("requirements"),
+            defaultRequest.get("preferred"),
+            defaultRequest.get("stack"),
+            defaultRequest.get("icon"),
+            0,
+            JobPostingStatus.ACTIVE,
+            LocalDateTime.now()
+    );
+  }
 }

@@ -1,6 +1,7 @@
 package com.coconut.quiz_spring.domain.jobposting.dto;
 
 import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingStatus;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -39,7 +40,7 @@ public class JobPostingEditReq {
     return checkList.stream().noneMatch(Objects::nonNull);
   }
 
-
+  @JsonCreator
   public static JobPostingEditReq of (String title, String requirements, String preferred, String stack, String status, String icon) {
     return JobPostingEditReq.builder()
             .title(title)

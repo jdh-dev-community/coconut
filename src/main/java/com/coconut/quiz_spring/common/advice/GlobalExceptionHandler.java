@@ -6,6 +6,7 @@ import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,6 +23,13 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+  @ResponseStatus(BAD_REQUEST)
+  @ExceptionHandler(BindException.class)
+  public @ResponseBody CustomResponse handleBindException(WebRequest req, BindException ex) {
+    log.info("error handler: handleBindException");
+    HttpErrorInfo errorInfo = createHttpErrorInfo(BAD_REQUEST, req, ex);
+    return CustomResponse.of(errorInfo);
+  }
   @ResponseStatus(NOT_FOUND)
   @ExceptionHandler(EntityNotFoundException.class)
   public @ResponseBody CustomResponse handleEntityNotFoundException(WebRequest req, EntityNotFoundException ex) {

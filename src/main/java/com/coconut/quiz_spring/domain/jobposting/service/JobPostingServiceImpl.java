@@ -1,5 +1,7 @@
 package com.coconut.quiz_spring.domain.jobposting.service;
 
+import com.coconut.quiz_spring.common.dto.ListReqDto;
+import com.coconut.quiz_spring.common.dto.ListResDto;
 import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingAction;
 import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingStatus;
 import com.coconut.quiz_spring.domain.jobposting.domain.JobPosting;
@@ -13,11 +15,14 @@ import com.coconut.quiz_spring.domain.jobposting.service.interfaces.JobPostingHi
 import com.coconut.quiz_spring.domain.jobposting.service.interfaces.JobPostingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Map;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -32,6 +37,19 @@ public class JobPostingServiceImpl implements JobPostingService {
   private final JobPostingHistoryService jobPostingHistoryService;
 
 
+  @Override
+  public ListResDto<JobPostingDto> getJobPostingList(ListReqDto dto) {
+
+    Page<JobPosting> page = Objects.nonNull(dto.getSearch())
+            ? jobPostingRepository.findAllActiveJobPostingWithSearch(dto.toPageable(), dto.getSearch().toLowerCase())
+            : jobPostingRepository.findAllActiveJobPosting(dto.toPageable());
+
+    List<JobPostingDto> contents = page.getContent().stream()
+            .map(JobPostingDto::from)
+            .collect(Collectors.toList());
+
+    return ListResDto.of(page.getTotalElements(), contents);
+  }
 
 
   @Transactional
@@ -40,13 +58,10 @@ public class JobPostingServiceImpl implements JobPostingService {
     JobPosting jobPosting = jobPostingMapper.from(dto);
     JobPosting savedJobPosting = jobPostingRepository.save(jobPosting);
 
-
     logHistory("ToBeUserId", JobPostingAction.CREATE, savedJobPosting.getJobPostingId(), dto);
 
     return JobPostingDto.from(savedJobPosting);
   }
-
-
 
   @Transactional
   @Override

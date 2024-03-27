@@ -1,4 +1,4 @@
-package com.coconut.quiz_spring.testUtils;
+package com.coconut.quiz_spring.utils;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;

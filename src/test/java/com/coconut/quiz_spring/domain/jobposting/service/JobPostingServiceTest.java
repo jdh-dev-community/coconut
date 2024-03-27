@@ -15,7 +15,7 @@ import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingEditReq;
 import com.coconut.quiz_spring.domain.jobposting.repository.JobPostingHistoryRepository;
 import com.coconut.quiz_spring.domain.jobposting.repository.JobPostingRepository;
 import com.coconut.quiz_spring.domain.jobposting.service.interfaces.JobPostingService;
-import com.coconut.quiz_spring.testUtils.ConcurrencyTestUtils;
+import com.coconut.quiz_spring.utils.ConcurrencyTestUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;

@@ -1,4 +1,4 @@
-package com.coconut.quiz_spring.testUtils;
+package com.coconut.quiz_spring.utils;
 
 @FunctionalInterface
 public interface Executable<T> {

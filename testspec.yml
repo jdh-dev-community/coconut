@@ -12,6 +12,9 @@ phases:
     commands:
       - ./gradlew test
 
+cache:
+  paths: []
+
 artifacts:
   files:
     - '**/*'

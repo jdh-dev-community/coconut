@@ -4,6 +4,7 @@ package com.coconut.quiz_spring.domain.jobposting.controller;
 import com.coconut.quiz_spring.common.dto.CustomResponse;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingCreateReq;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingDto;
+import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingEditReq;
 import com.coconut.quiz_spring.domain.jobposting.service.interfaces.JobPostingService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -44,8 +45,17 @@ public class JobPostingController {
     return response;
   }
 
-  @PatchMapping("/jobposting")
-  public void editJobPosting() {}
+  @Operation(summary = "채용공고 수정", description = "채용공고를 수정합니다.")
+  @ResponseStatus(HttpStatus.OK)
+  @PatchMapping("/jobposting/{id}")
+  public CustomResponse<JobPostingDto> editJobPosting(@PathVariable("id") long jobPostingId, @Valid @RequestBody JobPostingEditReq dto) {
+    if (dto.isEmpty()) throw new IllegalArgumentException("수정하려는 데이터가 존재하지 않습니다.");
+
+    JobPostingDto result = jobPostingService.editJobPosting(jobPostingId, dto);
+    CustomResponse<JobPostingDto> response = CustomResponse.of(result);
+
+    return response;
+  }
 
   @Operation(summary = "채용공고 삭제", description = "채용공고를 삭제합니다.")
   @ResponseStatus(HttpStatus.OK)

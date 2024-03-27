@@ -10,7 +10,7 @@ public interface JobPostingService {
 
   JobPostingDto createJobPosting(JobPostingCreateReq dto);
 
-  JobPostingDto editJobPosting(JobPostingEditReq dto);
+  JobPostingDto editJobPosting(long jobPostingId, JobPostingEditReq dto);
 
   JobPostingDto getJobPosting(long jobPostingId);
 

@@ -1,24 +1,31 @@
 package com.coconut.quiz_spring.domain.interview.service;
 
+import com.coconut.quiz_spring.common.utils.CustomObjectMapper;
+import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingAction;
 import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingStatus;
 import com.coconut.quiz_spring.domain.jobposting.domain.JobPosting;
+import com.coconut.quiz_spring.domain.jobposting.domain.JobPostingHistory;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingCreateReq;
 import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingDto;
+import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingEditReq;
 import com.coconut.quiz_spring.domain.jobposting.repository.JobPostingHistoryRepository;
 import com.coconut.quiz_spring.domain.jobposting.repository.JobPostingRepository;
 import com.coconut.quiz_spring.domain.jobposting.service.interfaces.JobPostingHistoryService;
 import com.coconut.quiz_spring.domain.jobposting.service.interfaces.JobPostingService;
 import com.coconut.quiz_spring.testUtils.ConcurrencyTestUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.persistence.EntityNotFoundException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -29,8 +36,10 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -43,7 +52,10 @@ public class JobPostingServiceTest {
   private JobPostingService jobPostingService;
 
   @Autowired
-  private JobPostingHistoryRepository jobPostingHistoryService;
+  private JobPostingHistoryRepository jobPostingHistoryRepository;
+
+  @Autowired
+  private CustomObjectMapper customObjectMapper;
 
   private Map<String, String> jobPostingData;
 
@@ -144,6 +156,7 @@ public class JobPostingServiceTest {
     @AfterEach
     public void cleanup() {
       jobPostingRepository.deleteAll();
+      jobPostingHistoryRepository.deleteAll();
     }
 
     @Test
@@ -201,7 +214,117 @@ public class JobPostingServiceTest {
 
     @Test
     public void 채용공고_생성에_성공한_경우_history를_남긴다() {
+      JobPostingDto result = jobPostingService.createJobPosting(createDto);
+      JobPostingHistory history = jobPostingHistoryRepository.findByJobPostingId(result.getJobPostingId())
+              .orElseThrow(() -> new EntityNotFoundException());
 
+      String request = customObjectMapper.writeValueAsString(createDto);
+
+      assertEquals(JobPostingAction.CREATE, history.getAction());
+      assertEquals(request, history.getRequest());
+    }
+
+  }
+
+  @Nested
+  class 채용공고수정_테스트 {
+
+    private JobPosting savedJobPosting;
+    private JobPostingEditReq editDto;
+
+    @BeforeEach
+    public void setup() {
+      JobPosting jobPosting = JobPosting.builder()
+              .jobPostingId(1)
+              .title(jobPostingData.get("title"))
+              .requirements(jobPostingData.get("requirements"))
+              .preferred(jobPostingData.get("preferred"))
+              .stack(jobPostingData.get("stack"))
+              .icon(jobPostingData.get("icon"))
+              .viewCount(0)
+              .status(JobPostingStatus.ACTIVE)
+              .build();
+
+      savedJobPosting = jobPostingRepository.save(jobPosting);
+
+      this.editDto = JobPostingEditReq.of(
+              jobPostingData.get("title"),
+              null,
+              null,
+              "react",
+              JobPostingStatus.INACTIVE.getValue(),
+              jobPostingData.get("icon")
+      );
+    }
+
+    @AfterEach
+    public void cleanup() {
+      jobPostingRepository.deleteAll();
+    }
+
+    @Test
+    public void 수정하려하는_채용공고_id에_매치되는_공고가_없는_경우_EntityNotFoundException_발생() throws Exception {
+      long notMatched = 100000;
+      assertThrows(EntityNotFoundException.class, () ->jobPostingService.editJobPosting(notMatched, editDto));
+    }
+    @Test
+    public void 잘못된_입력으로_채용공고_수정을_시도할_경우_IllegalArgumentException_발생() throws Exception {
+      assertThrows(IllegalArgumentException.class, () -> jobPostingService.editJobPosting(savedJobPosting.getJobPostingId(), null));
+    }
+
+    @Test
+    public void 수정을_요청한_필드에_대해서만_업데이트를_적용() throws Exception {
+      long validId = savedJobPosting.getJobPostingId();
+      JobPostingEditReq editDto = JobPostingEditReq.of(
+              "new title",
+              null,
+              null,
+              null,
+              null,
+              null
+      );
+
+      JobPostingDto result = jobPostingService.editJobPosting(validId, editDto);
+
+      assertEquals(savedJobPosting.getJobPostingId(), result.getJobPostingId());
+      assertEquals(editDto.getTitle(), result.getTitle());
+      assertNotEquals(editDto.getRequirements(), result.getRequirements());
+      assertNotEquals(editDto.getPreferred(), result.getPreferred());
+      assertNotEquals(editDto.getStack(), result.getStack());
+      assertNotEquals(editDto.getStatus(), result.getStatus());
+      assertNotEquals(editDto.getIcon(), result.getIcon());
+
+    }
+
+    @Test
+    public void 채용공고_수정에_성공한_경우_JobPostingDto를_반환() throws Exception {
+      long validId = savedJobPosting.getJobPostingId();
+
+      JobPostingDto result = jobPostingService.editJobPosting(validId, editDto);
+
+      assertEquals(savedJobPosting.getJobPostingId(), result.getJobPostingId());
+      assertEquals(editDto.getTitle(), result.getTitle());
+      assertEquals(savedJobPosting.getRequirements(), result.getRequirements());
+      assertEquals(savedJobPosting.getPreferred(), result.getPreferred());
+      assertEquals(editDto.getStack(), result.getStack());
+      assertEquals(editDto.getIcon(), result.getIcon());
+      assertEquals(0, result.getViewCount());
+      assertEquals(editDto.getStatus(), result.getStatus());
+      assertThat(result.getUpdatedAt()).isNotNull();
+    }
+
+    @Test
+    public void 채용공고_수정에_성공한_경우_history를_남긴다() {
+      long validId = savedJobPosting.getJobPostingId();
+      JobPostingDto result = jobPostingService.editJobPosting(validId, editDto);
+      JobPostingHistory history = jobPostingHistoryRepository.findByJobPostingId(result.getJobPostingId())
+              .orElseThrow(() -> new EntityNotFoundException());
+
+      String request = customObjectMapper.writeValueAsString(editDto);
+
+      assertEquals(validId, history.getJobPostingId());
+      assertEquals(JobPostingAction.EDIT, history.getAction());
+      assertEquals(request, history.getRequest());
     }
 
   }
@@ -292,6 +415,18 @@ public class JobPostingServiceTest {
       assertEquals(1, success);
       assertEquals(threadCount - success, fail);
 
+    }
+
+    @Test
+    public void 채용공고_삭제에_성공한_경우_history를_남긴다() {
+      long validId = savedJobPosting.getJobPostingId();
+      JobPostingDto result = jobPostingService.deleteJobPosting(validId);
+      JobPostingHistory history = jobPostingHistoryRepository.findByJobPostingId(result.getJobPostingId())
+              .orElseThrow(() -> new EntityNotFoundException());
+
+      assertEquals(validId, history.getJobPostingId());
+      assertEquals(JobPostingAction.DELETE, history.getAction());
+      assertNull(history.getRequest());
     }
   }
 

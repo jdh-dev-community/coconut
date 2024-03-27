@@ -32,6 +32,9 @@ public class JobPostingServiceImpl implements JobPostingService {
   private final JobPostingHistoryService jobPostingHistoryService;
 
 
+
+
+  @Transactional
   @Override
   public JobPostingDto createJobPosting(JobPostingCreateReq dto) {
     JobPosting jobPosting = jobPostingMapper.from(dto);
@@ -56,9 +59,26 @@ public class JobPostingServiceImpl implements JobPostingService {
     return JobPostingDto.from(jobPosting);
   }
 
+  @Transactional
   @Override
-  public JobPostingDto editJobPosting(JobPostingEditReq dto) {
-    return null;
+  public JobPostingDto editJobPosting(long jobPostingId, JobPostingEditReq dto) {
+    if (dto == null) throw new IllegalArgumentException("dto는 null이 될 수 없습니다.");
+
+    JobPosting jobPosting = jobPostingRepository.findById(jobPostingId)
+            .orElseThrow(() -> new EntityNotFoundException("해당 id와 일치하는 공고가 없습니다. id: " + jobPostingId));
+
+    jobPosting.updateJobPosting(
+            dto.getTitle(),
+            dto.getRequirements(),
+            dto.getPreferred(),
+            dto.getStack(),
+            dto.getIcon(),
+            dto.getStatus()
+    );
+
+    logHistory("ToBeUserId", JobPostingAction.EDIT, jobPosting.getJobPostingId(), dto);
+
+    return JobPostingDto.from(jobPosting);
   }
 
 

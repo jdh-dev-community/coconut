@@ -51,21 +51,11 @@ public class JobPosting extends BaseEntity {
 
   @Schema(description = "상태", example = "active(노출), inactive(비노출), deleted(삭제)")
   @Column(name = "status")
+
   private String status;
 
-
-  public void updateViewCount(long updatedViewCount) {
-    this.viewCount = updatedViewCount;
-  }
-
-
-  public JobPostingStatus getStatus() {
-    return JobPostingStatus.findBy(status);
-  }
-
-  public void updateStatus(JobPostingStatus status) {
-    this.status = status.getValue();
-  }
+  @Version
+  private long version;
 
   @Builder
   public JobPosting(long jobPostingId, String title, String requirements, String preferred, String stack, String icon, long viewCount, JobPostingStatus status) {
@@ -78,4 +68,29 @@ public class JobPosting extends BaseEntity {
     this.viewCount = viewCount;
     this.status = status.getValue();
   }
+
+  public JobPostingStatus getStatus() {
+    return JobPostingStatus.findBy(status);
+  }
+
+
+
+  public void updateJobPosting(String title, String requirements, String preferred, String stack, String icon, JobPostingStatus status) {
+    if (title != null) this.title = title;
+    if (requirements != null) this.requirements = requirements;
+    if (preferred != null) this.preferred = preferred;
+    if (stack != null) this.stack = stack;
+    if (icon != null) this.icon = icon;
+    if (status != null) this.status = status.getValue();
+  }
+  public void updateViewCount(long updatedViewCount) {
+    this.viewCount = updatedViewCount;
+  }
+  public void updateStatus(JobPostingStatus status) {
+    this.status = status.getValue();
+  }
+
+
+
+
 }

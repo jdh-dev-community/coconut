@@ -1,7 +1,13 @@
 package com.coconut.quiz_spring.domain.jobposting.dto;
 
+import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+
+import javax.validation.constraints.NotNull;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 
 @Schema(description = "인터뷰 수정 요청 객체")
@@ -10,7 +16,6 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JobPostingEditReq {
-
   @Schema(description = "채용공고 제목", example = "백엔드 주니어 채용 공고")
   private String title;
 
@@ -26,13 +31,23 @@ public class JobPostingEditReq {
   @Schema(description = "아이콘", example = "/springboot (s3 path)")
   private String icon;
 
-  public static JobPostingEditReq of (String title, String requirements, String preferred, String stack, String icon) {
+  @Schema(description = "채용공고 상태", example = "active, inactive, deleted")
+  private JobPostingStatus status;
+
+  public boolean isEmpty() {
+    List<Object> checkList = Arrays.asList(title, requirements, preferred, stack, icon, status);
+    return checkList.stream().noneMatch(Objects::nonNull);
+  }
+
+
+  public static JobPostingEditReq of (String title, String requirements, String preferred, String stack, String status, String icon) {
     return JobPostingEditReq.builder()
             .title(title)
             .requirements(requirements)
             .preferred(preferred)
             .stack(stack)
             .icon(icon)
+            .status(status != null ? JobPostingStatus.findBy(status) : null)
             .build();
   }
 
@@ -44,6 +59,7 @@ public class JobPostingEditReq {
             ", preferred='" + preferred + '\'' +
             ", stack='" + stack + '\'' +
             ", icon='" + icon + '\'' +
+            ", status=" + status +
             '}';
   }
 }

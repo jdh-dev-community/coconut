@@ -6,7 +6,7 @@ phases:
   pre_build:
     commands:
       - java -version
-      - export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
+      - export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
       - aws s3 cp $REMOTE_PATH ./src/main/resources/application.yml
   build:
     commands:

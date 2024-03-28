@@ -7,7 +7,7 @@ phases:
     commands:
       - java -version
       - export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
-      - aws s3 cp $REMOTE_PATH > ./src/main/resources/application.yml
+      - aws s3 cp $REMOTE_PATH ./src/main/resources/application.yml
   build:
     commands:
       - ./gradlew test

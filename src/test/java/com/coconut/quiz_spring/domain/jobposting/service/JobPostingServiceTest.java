@@ -69,7 +69,7 @@ public class JobPostingServiceTest {
   }
 
   @Nested
-  class JobPostingDetail_Test {
+  class 채용공고조회_테스트 {
     private JobPosting savedJobPosting;
 
     @BeforeEach
@@ -127,7 +127,7 @@ public class JobPostingServiceTest {
   }
 
   @Nested
-  class JobPostingCreate_Test {
+  class 채용공고생성_테스트 {
     private JobPostingCreateReq createDto;
 
     @BeforeEach
@@ -215,7 +215,7 @@ public class JobPostingServiceTest {
   }
 
   @Nested
-  class JobPostingEdit_Test {
+  class 채용공고수정_테스트 {
 
     private JobPosting savedJobPosting;
     private JobPostingEditReq editDto;
@@ -308,7 +308,7 @@ public class JobPostingServiceTest {
   }
 
   @Nested
-  class JobPostingDelete_Test {
+  class 채용공고삭제_테스트 {
     private JobPosting savedJobPosting;
 
     @BeforeEach
@@ -409,7 +409,7 @@ public class JobPostingServiceTest {
   }
 
   @Nested
-  class JobPostingList_Test {
+  class 채용공고목록_조회_테스트 {
 
     private int TOTAL_ITEM_COUNT = 40;
 

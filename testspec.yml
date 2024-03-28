@@ -4,6 +4,10 @@ phases:
     commands:
       - export LANG=en_US.UTF-8
       - export LC_ALL=en_US.UTF-8
+      # AWS CLI v2 설치
+      - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      - unzip awscliv2.zip
+      - sudo ./aws/install
   pre_build:
     commands:
       - java -version

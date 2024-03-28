@@ -6,11 +6,10 @@ phases:
   pre_build:
     commands:
       - java -version
-      - export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
       - aws s3 cp $REMOTE_PATH ./src/main/resources/application.yml
   build:
     commands:
-      - ./gradlew test
+      - ./gradlew test -Dfile.encoding=UTF-8
 
 cache:
   paths: []

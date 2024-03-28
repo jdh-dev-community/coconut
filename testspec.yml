@@ -2,9 +2,7 @@ version: 0.2
 phases:
   install:
     commands:
-      - export LANG=en_US.UTF-8
-      - export LC_ALL=en_US.UTF-8
-      # unzip 설치 (Amazon Linux, CentOS, Red Hat 등)
+      # unzip 설치
       - apt-get update
       - apt-get install -y unzip
       # AWS CLI v2 설치
@@ -14,16 +12,10 @@ phases:
   pre_build:
     commands:
       - java -version
-      - export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
-      - export JAVA_OPTS="$JAVA_OPTS -Dfile.encoding=UTF-8"
-      - export GRADLE_OPTS="-Dfile.encoding=UTF-8"
       - aws s3 cp $REMOTE_PATH ./src/main/resources/application.yml
   build:
     commands:
-      - ./gradlew test -Dfile.encoding=UTF-8
-
-cache:
-  paths: []
+      - ./gradlew test
 
 artifacts:
   files:

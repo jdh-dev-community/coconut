@@ -2,10 +2,6 @@ version: 0.2
 phases:
   install:
     commands:
-      - wget -O- https://apt.corretto.aws/corretto.key | sudo apt-key add -
-      - sudo add-apt-repository 'deb https://apt.corretto.aws stable main'
-      - sudo apt-get update
-      - sudo apt-get install -y java-17-amazon-corretto-jdk
       - export LANG=en_US.UTF-8
       - export LC_ALL=en_US.UTF-8
   pre_build:

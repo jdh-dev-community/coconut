@@ -64,7 +64,7 @@ public class JobPostingHistoryServiceTest {
   }
 
   @Nested
-  class 채용공고_히스토리_생성_테스트 {
+  class JobPostingHistoryCreate_Test {
 
     private JobPosting savedJobPosting;
     private JobPostingHistoryCreateReq createDto;

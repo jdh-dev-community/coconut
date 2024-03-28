@@ -64,7 +64,7 @@ public class JobPostingServiceControllerTest {
   }
 
   @Nested
-  class 채용공고조회_테스트 {
+  class JobPostDetail_Test {
 
     private JobPostingDto jobPostingDto;
 
@@ -111,7 +111,7 @@ public class JobPostingServiceControllerTest {
   }
 
   @Nested
-  class 채용공고생성_테스트 {
+  class JobPostCreate_Test {
     private JobPostingDto jobPostingDto;
 
     @BeforeEach
@@ -171,7 +171,7 @@ public class JobPostingServiceControllerTest {
   }
 
   @Nested
-  class 채용공고수정_테스트 {
+  class JobPostingEdit_Test {
     private JobPostingDto jobPostingDto;
 
     @BeforeEach
@@ -229,7 +229,7 @@ public class JobPostingServiceControllerTest {
   }
 
   @Nested
-  class 채용공고삭제_테스트 {
+  class JobPostingDelete_Test {
     private JobPostingDto jobPostingDto;
 
     @BeforeEach
@@ -276,7 +276,7 @@ public class JobPostingServiceControllerTest {
   }
 
   @Nested
-  class 채용공고목록_조회_테스트 {
+  class JobPostList_Test {
     private String url = "/api/v1/jobpostings";
     private final int DEFAULT_PAGE_NUMBER = 1;
     private final int DEFAULT_PAGE_SIZE = 10;

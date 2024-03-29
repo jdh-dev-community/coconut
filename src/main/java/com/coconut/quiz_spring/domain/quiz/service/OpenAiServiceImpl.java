@@ -54,7 +54,7 @@ public class OpenAiServiceImpl implements OpenAiService {
     try {
       log.info("openai request started: >>");
       ResponseEntity<String> response = restTemplate.exchange(url, method, entity, String.class);
-      log.info("openai request finished: >>");
+      log.info("openai request finished: >> " + response);
       return response;
     } catch (HttpClientErrorException.Unauthorized ex) {
       throw new InvalidOpenAiKeyException(ex.getMessage(), ex.getStatusCode(), ex.getCause());

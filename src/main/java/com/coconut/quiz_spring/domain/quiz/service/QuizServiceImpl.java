@@ -4,6 +4,8 @@ package com.coconut.quiz_spring.domain.quiz.service;
 import com.coconut.quiz_spring.domain.jobposting.domain.JobPosting;
 import com.coconut.quiz_spring.domain.jobposting.repository.JobPostingRepository;
 import com.coconut.quiz_spring.domain.quiz.domain.Quiz;
+import com.coconut.quiz_spring.domain.quiz.dto.AnswerCreateReqDto;
+import com.coconut.quiz_spring.domain.quiz.dto.AnswerDto;
 import com.coconut.quiz_spring.domain.quiz.dto.QuizDto;
 import com.coconut.quiz_spring.domain.quiz.domain.mapper.QuizMapper;
 import com.coconut.quiz_spring.domain.quiz.dto.QuizToJobPostingDto;
@@ -72,5 +74,15 @@ public class QuizServiceImpl implements QuizService {
             .toList();
 
     return result;
+  }
+
+
+  @Override
+  public AnswerDto createAnswer(AnswerCreateReqDto dto) {
+    Quiz quiz = quizRepository.findById(dto.getQuizId())
+            .orElseThrow(() -> new EntityNotFoundException("일치하는 퀴즈가 없습니다. [id]: " + dto.getQuizId()));
+
+    AnswerDto answer = openAiService.generateAnswer(quiz.getQuiz(), quiz.getKeywords(), dto.getAnswer());
+    return answer;
   }
 }

@@ -1,6 +1,7 @@
 package com.coconut.quiz_spring.domain.quiz.service;
 
 import com.coconut.quiz_spring.common.config.OpenAiProperties;
+import com.coconut.quiz_spring.domain.quiz.dto.AnswerDto;
 import com.coconut.quiz_spring.domain.quiz.dto.QuizDto;
 import com.coconut.quiz_spring.domain.quiz.exception.ExceedOpenAiQuotaException;
 import com.coconut.quiz_spring.domain.quiz.exception.InvalidOpenAiKeyException;
@@ -36,17 +37,21 @@ public class OpenAiServiceImpl implements OpenAiService {
     HttpEntity<String> entity = createHttpEntity(guide, prompt);
     ResponseEntity<String> response = request(url, entity, HttpMethod.POST);
 
-    return getContent(response.getBody());
+    return getContent(response.getBody(), QuizDto.class);
   }
 
-  public QuizDto generateAnswer(String prompt) {
+  public AnswerDto generateAnswer(String quiz, String keyword, String answer) {
     String url = openAiProperties.getApi().getUrl();
-    String guide = openAiProperties.getAnswer().getGuide();
+    String baseGuide = openAiProperties.getAnswer().getGuide();
+    String prefixGuide = "문제: " + quiz + ". " + "핵심 키워드: " + keyword;
 
-    HttpEntity<String> entity = createHttpEntity(guide, prompt);
+    String prefixAnswer = "저의 정답입니다. 채점해주세요. 정답: ";
+
+
+    HttpEntity<String> entity = createHttpEntity(prefixGuide + baseGuide, prefixAnswer + answer);
     ResponseEntity<String> response = request(url, entity, HttpMethod.POST);
 
-    return getContent(response.getBody());
+    return getContent(response.getBody(), AnswerDto.class);
   }
 
   private ResponseEntity<String> request(String url, HttpEntity<String> entity, HttpMethod method) {
@@ -85,7 +90,7 @@ public class OpenAiServiceImpl implements OpenAiService {
     return new HttpEntity<>(requestBody, headers);
   }
 
-  private QuizDto getContent(String responseBody) {
+  private <T> T getContent(String responseBody,Class<T> dtoClass ) {
     try {
       JsonNode rootNode = objectMapper.readTree(responseBody);
       JsonNode choicesNode = rootNode.path("choices");
@@ -94,7 +99,7 @@ public class OpenAiServiceImpl implements OpenAiService {
       JsonNode messageNode = firstChoice.path("message");
       String contentJson = messageNode.path("content").asText();
 
-      QuizDto content = objectMapper.readValue(contentJson, QuizDto.class);
+      T content = objectMapper.readValue(contentJson, dtoClass);
       return content;
     } catch (JsonProcessingException ex) {
       throw new RuntimeException("openai 응답 파싱에 실패하였습니다." + ex.getMessage());

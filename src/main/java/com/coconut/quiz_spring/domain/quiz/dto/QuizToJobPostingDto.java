@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class QuizToJobPostingDto {
+
   private long jobPostingId;
   private List<Long> quizIds;
 

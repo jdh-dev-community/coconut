@@ -1,4 +1,4 @@
-package com.coconut.quiz_spring.domain.quiz.dto.mapper;
+package com.coconut.quiz_spring.domain.quiz.domain.mapper;
 
 import com.coconut.quiz_spring.domain.jobposting.domain.JobPosting;
 import com.coconut.quiz_spring.domain.quiz.domain.Quiz;

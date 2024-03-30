@@ -3,7 +3,7 @@ package com.coconut.quiz_spring.domain.quiz.service;
 
 import com.coconut.quiz_spring.domain.quiz.domain.Quiz;
 import com.coconut.quiz_spring.domain.quiz.dto.QuizDto;
-import com.coconut.quiz_spring.domain.quiz.dto.mapper.QuizMapper;
+import com.coconut.quiz_spring.domain.quiz.domain.mapper.QuizMapper;
 import com.coconut.quiz_spring.domain.quiz.repository.QuizRepository;
 import com.coconut.quiz_spring.domain.quiz.service.interfaces.OpenAiService;
 import com.coconut.quiz_spring.domain.quiz.service.interfaces.QuizService;

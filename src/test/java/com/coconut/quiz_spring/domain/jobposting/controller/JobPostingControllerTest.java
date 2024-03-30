@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(JobPostingController.class)
 @ActiveProfiles("test")
-public class JobPostingServiceControllerTest {
+public class JobPostingControllerTest {
   private final String baseUrl = "/api/v1/jobposting";
 
   @MockBean

@@ -3,15 +3,13 @@ package com.coconut.quiz_spring.domain.jobposting.domain;
 import com.coconut.quiz_spring.common.domain.BaseEntity;
 import com.coconut.quiz_spring.domain.jobposting.constants.JobPostingStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 
 @Entity
 @Table(name = "jobpostings")

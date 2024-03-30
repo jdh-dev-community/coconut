@@ -46,4 +46,9 @@ public class Quiz extends BaseEntity {
     this.answer = answer;
     this.jobPosting = jobPosting;
   }
+
+  public void updateJobPosting(JobPosting jobPosting) {
+    this.jobPosting = jobPosting;
+  }
+
 }

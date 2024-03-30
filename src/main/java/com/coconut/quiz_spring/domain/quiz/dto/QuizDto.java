@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.util.Objects;
+
 
 @Getter
 @Builder
@@ -25,8 +27,8 @@ public class QuizDto {
   @Schema(description = "핵심 키워드", example = "'srp, ocp,")
   private String keywords;
 
-  @Schema(description = "연관 채용공고", example = "백엔드 주니어 채용공고")
-  private JobPostingDto jobPosting;
+  @Schema(description = "연관 채용공고 id", example = "백엔드 주니어 채용공고")
+  private Long jobPostingId;
 
   @JsonCreator
   public static QuizDto of(String quiz, String answer, String keywords) {
@@ -34,6 +36,20 @@ public class QuizDto {
             .quiz(quiz)
             .answer(answer)
             .keywords(keywords)
+            .build();
+  }
+
+  public static QuizDto from (Quiz quiz) {
+    long jobPosingId = !Objects.isNull(quiz.getJobPosting())
+            ? quiz.getJobPosting().getJobPostingId()
+            : null;
+
+    return QuizDto.builder()
+            .quizId(quiz.getQuiz_id())
+            .quiz(quiz.getQuiz())
+            .answer(quiz.getAnswer())
+            .keywords(quiz.getKeywords())
+            .jobPostingId(jobPosingId)
             .build();
   }
 

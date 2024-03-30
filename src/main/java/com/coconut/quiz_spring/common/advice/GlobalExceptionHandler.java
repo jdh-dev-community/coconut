@@ -5,6 +5,7 @@ import com.coconut.quiz_spring.common.dto.HttpErrorInfo;
 import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,6 +23,14 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+  @ResponseStatus(BAD_REQUEST)
+  @ExceptionHandler(InvalidDataAccessApiUsageException.class)
+  public @ResponseBody CustomResponse handleInvalidDataAccessApiUsageException(WebRequest req, InvalidDataAccessApiUsageException ex) {
+    log.info("error handler: handleInvalidDataAccessApiUsageException");
+    HttpErrorInfo errorInfo = createHttpErrorInfo(BAD_REQUEST, req, ex);
+    return CustomResponse.of(errorInfo);
+  }
 
   @ResponseStatus(BAD_REQUEST)
   @ExceptionHandler(BindException.class)

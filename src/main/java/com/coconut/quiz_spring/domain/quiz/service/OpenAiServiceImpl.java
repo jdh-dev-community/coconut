@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Map;
+
 
 @Slf4j
 @Service
@@ -40,18 +42,23 @@ public class OpenAiServiceImpl implements OpenAiService {
     return getContent(response.getBody(), QuizDto.class);
   }
 
-  public AnswerDto generateAnswer(String quiz, String keyword, String answer) {
+  public AnswerDto generateAnswer(long quizId, String quiz, String keyword, String answer) {
     String url = openAiProperties.getApi().getUrl();
     String baseGuide = openAiProperties.getAnswer().getGuide();
     String prefixGuide = "문제: " + quiz + ". " + "핵심 키워드: " + keyword;
 
     String prefixAnswer = "저의 정답입니다. 채점해주세요. 정답: ";
 
-
     HttpEntity<String> entity = createHttpEntity(prefixGuide + baseGuide, prefixAnswer + answer);
     ResponseEntity<String> response = request(url, entity, HttpMethod.POST);
 
-    return getContent(response.getBody(), AnswerDto.class);
+    Map<String, Object> result = getContent(response.getBody(), Map.class);
+    return AnswerDto.of(
+            quizId,
+            (int) result.get("score"),
+            (String) result.get("reason"),
+            (String) result.get("feedback"),
+            keyword);
   }
 
   private ResponseEntity<String> request(String url, HttpEntity<String> entity, HttpMethod method) {
@@ -90,7 +97,7 @@ public class OpenAiServiceImpl implements OpenAiService {
     return new HttpEntity<>(requestBody, headers);
   }
 
-  private <T> T getContent(String responseBody,Class<T> dtoClass ) {
+  private <T> T getContent(String responseBody, Class<T> dtoClass) {
     try {
       JsonNode rootNode = objectMapper.readTree(responseBody);
       JsonNode choicesNode = rootNode.path("choices");

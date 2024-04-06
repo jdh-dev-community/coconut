@@ -5,5 +5,5 @@ import com.coconut.quiz_spring.domain.quiz.dto.QuizDto;
 
 public interface OpenAiService {
   QuizDto generateQuiz();
-  AnswerDto generateAnswer(String quiz, String keyword, String answer);
+  AnswerDto generateAnswer(long quizId, String quiz, String keyword, String answer);
 }

@@ -56,7 +56,6 @@ public class OpenAiServiceTest {
       QuizDto result = openAiService.generateQuiz();
 
       assertThat(result.getQuiz()).isNotNull();
-      assertThat(result.getAnswer()).isNotNull();
       assertThat(result.getKeywords()).isNotEmpty();
       assertThat(result.getKeywords()).isNotNull();
     }

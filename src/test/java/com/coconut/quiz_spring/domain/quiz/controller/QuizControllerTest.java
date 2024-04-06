@@ -55,7 +55,6 @@ public class QuizControllerTest {
     public void setup() {
       quizDto = QuizDto.of(
               "Spring Framework에서 Dependency Injection이란 무엇인가요?",
-              "Dependency Injection은 객체 간의 의존 관계를 외부에서 설정해주는 디자인 패턴으로, 객체 생성 및 의존성 해결을 자동화하여 코드의 재사용성과 유지보수성을 향상시킵니다.",
               "Spring Framework, Dependency Injection, 객체, 의존 관계, 외부, 설정, 디자인 패턴, 객체 생성, 의존성 해결, 자동화, 코드 재사용성, 유지보수성"
       );
 

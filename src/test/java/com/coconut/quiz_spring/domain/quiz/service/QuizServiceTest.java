@@ -56,7 +56,6 @@ public class QuizServiceTest {
 
       assertThat(result.getQuizId()).isNotNull();
       assertThat(result.getQuiz()).isNotNull();
-      assertThat(result.getAnswer()).isNotNull();
       assertThat(result.getKeywords()).isNotNull();
     }
 
@@ -69,7 +68,6 @@ public class QuizServiceTest {
 
       assertEquals(quiz.getQuiz_id(), result.getQuizId());
       assertEquals(quiz.getQuiz(), result.getQuiz());
-      assertEquals(quiz.getAnswer(), result.getAnswer());
       assertEquals(quiz.getKeywords(), result.getKeywords());
     }
 
@@ -96,7 +94,6 @@ public class QuizServiceTest {
 
       Quiz quiz = Quiz.builder()
               .quiz("quiz")
-              .answer("answer")
               .keywords("1,2,3")
               .jobPosting(null)
               .build();

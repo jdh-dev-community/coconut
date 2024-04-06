@@ -14,9 +14,6 @@ public class AnswerDto {
   @Schema(description = "퀴즈 id", example = "1")
   private long quizId;
 
-  @Schema(description = "채용공고 id", example = "1")
-  private long jobPostingId;
-
   @Schema(description = "점수 (10점 만점으로 표기)", example = "1")
   private int score;
 
@@ -26,12 +23,19 @@ public class AnswerDto {
   @Schema(description = "피드백", example = "1")
   private String feedback;
 
+  @Schema(description = "핵심 키워드", example = "'srp, ocp,")
+  private String keywords;
+
   @JsonCreator
-  public static AnswerDto of(Integer score, String reason, String feedback) {
+  public static AnswerDto of(long quizId,  Integer score, String reason, String feedback, String keywords) {
     return AnswerDto.builder()
+            .quizId(quizId)
             .score(score)
             .reason(reason)
             .feedback(feedback)
+            .keywords(keywords)
             .build();
   }
+
+
 }

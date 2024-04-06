@@ -82,7 +82,7 @@ public class QuizServiceImpl implements QuizService {
     Quiz quiz = quizRepository.findById(dto.getQuizId())
             .orElseThrow(() -> new EntityNotFoundException("일치하는 퀴즈가 없습니다. [id]: " + dto.getQuizId()));
 
-    AnswerDto answer = openAiService.generateAnswer(quiz.getQuiz(), quiz.getKeywords(), dto.getAnswer());
+    AnswerDto answer = openAiService.generateAnswer(quiz.getQuiz_id(), quiz.getQuiz(), quiz.getKeywords(), dto.getAnswer());
     return answer;
   }
 }

@@ -30,20 +30,15 @@ public class Quiz extends BaseEntity {
   @Column(name = "keywords")
   private String keywords;
 
-  @Schema(description = "추천답안", example = "객체지향의 ...")
-  @Column(name = "answer")
-  private String answer;
-
   @JoinColumn(name = "jobposting_id")
   @ManyToOne(fetch = FetchType.LAZY)
   private JobPosting jobPosting;
 
   @Builder
-  public Quiz(long quiz_id, String quiz, String keywords, String answer, JobPosting jobPosting) {
+  public Quiz(long quiz_id, String quiz, String keywords, JobPosting jobPosting) {
     this.quiz_id = quiz_id;
     this.quiz = quiz;
     this.keywords = keywords;
-    this.answer = answer;
     this.jobPosting = jobPosting;
   }
 

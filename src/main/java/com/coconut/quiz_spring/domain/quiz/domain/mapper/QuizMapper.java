@@ -14,7 +14,6 @@ public class QuizMapper {
     return Quiz.builder()
             .quiz(dto.getQuiz())
             .keywords(dto.getKeywords())
-            .answer(dto.getAnswer())
             .build();
   }
 
@@ -22,7 +21,6 @@ public class QuizMapper {
     return Quiz.builder()
             .quiz(dto.getQuiz())
             .keywords(dto.getKeywords())
-            .answer(dto.getAnswer())
             .jobPosting(jobPosting)
             .build();
   }

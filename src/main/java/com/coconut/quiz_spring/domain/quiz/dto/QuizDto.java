@@ -1,6 +1,5 @@
 package com.coconut.quiz_spring.domain.quiz.dto;
 
-import com.coconut.quiz_spring.domain.jobposting.dto.JobPostingDto;
 import com.coconut.quiz_spring.domain.quiz.domain.Quiz;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,9 +20,6 @@ public class QuizDto {
   @Schema(description = "퀴즈 질문", example = "oop란 무엇인가요")
   private String quiz;
 
-  @Schema(description = "추천 답안", example = "객체 지향의 ..")
-  private String answer;
-
   @Schema(description = "핵심 키워드", example = "'srp, ocp,")
   private String keywords;
 
@@ -31,10 +27,9 @@ public class QuizDto {
   private Long jobPostingId;
 
   @JsonCreator
-  public static QuizDto of(String quiz, String answer, String keywords) {
+  public static QuizDto of(String quiz, String keywords) {
     return QuizDto.builder()
             .quiz(quiz)
-            .answer(answer)
             .keywords(keywords)
             .build();
   }
@@ -47,7 +42,6 @@ public class QuizDto {
     return QuizDto.builder()
             .quizId(quiz.getQuiz_id())
             .quiz(quiz.getQuiz())
-            .answer(quiz.getAnswer())
             .keywords(quiz.getKeywords())
             .jobPostingId(jobPosingId)
             .build();
@@ -62,7 +56,6 @@ public class QuizDto {
   public String toString() {
     return "QuizDto{" +
             "quiz='" + quiz + '\'' +
-            ", answer='" + answer + '\'' +
             ", keywords='" + keywords + '\'' +
             '}';
   }

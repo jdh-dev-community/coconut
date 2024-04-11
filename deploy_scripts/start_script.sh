@@ -10,7 +10,7 @@ aws ecr get-login-password --region "$REGION" | docker login --username AWS --pa
 echo "ECR Login success" >> /home/ec2-user/deploy.log
 
 
-IMAGE="$USER_ID.dkr.ecr.$REGION.amazonaws.com/$REPO"
+IMAGE="$USER_ID.dkr.ecr.$REGION.amazonaws.com/$REPO:$IMAGE_TAG"
 docker pull "$IMAGE"
 docker run -d -p 80:"$PORT" --name "$REPO" "$IMAGE"
 

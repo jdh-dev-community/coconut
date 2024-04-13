@@ -15,7 +15,7 @@ else
 fi
 
 # Docker 이미지 삭제
-IMAGE="$USER_ID.dkr.ecr.$REGION.amazonaws.com/$REPO"
+IMAGE="$USER_ID.dkr.ecr.$REGION.amazonaws.com/$REPO:$IMAGE_TAG"
 if docker images | grep -q "$REPO"; then
     echo "Removing Docker image: $IMAGE" >> /home/ec2-user/deploy.log
     docker rmi "$IMAGE"

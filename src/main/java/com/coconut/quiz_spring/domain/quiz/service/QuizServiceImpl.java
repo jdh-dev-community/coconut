@@ -45,9 +45,13 @@ public class QuizServiceImpl implements QuizService {
     return result;
   }
 
+  @Transactional
   @Override
   public QuizDto insertExternalQuiz(QuizDto dto) {
-    Quiz quiz = quizMapper.from(dto);
+    JobPosting jobPosting = jobPostingRepository.findById(dto.getJobPostingId())
+            .orElseThrow(() -> new EntityNotFoundException());
+
+    Quiz quiz = quizMapper.from(dto, jobPosting);
     quizRepository.save(quiz);
 
     dto.updateQuizId(quiz.getQuiz_id());

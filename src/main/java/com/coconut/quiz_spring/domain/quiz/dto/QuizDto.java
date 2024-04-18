@@ -27,10 +27,11 @@ public class QuizDto {
   private Long jobPostingId;
 
   @JsonCreator
-  public static QuizDto of(String quiz, String keywords) {
+  public static QuizDto of(String quiz, String keywords, Long jobPostingId) {
     return QuizDto.builder()
             .quiz(quiz)
             .keywords(keywords)
+            .jobPostingId(jobPostingId)
             .build();
   }
 

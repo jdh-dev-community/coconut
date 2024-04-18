@@ -54,13 +54,10 @@ public class QuizServiceImpl implements QuizService {
     return dto;
   }
 
-  @Transactional
   @Override
   public List<QuizDto> mapQuizToJobPosting(QuizToJobPostingDto dto) {
-    JobPosting jobPosting = jobPostingRepository.findByIdWithPessimisticWrite(dto.getJobPostingId())
+    JobPosting jobPosting = jobPostingRepository.findById(dto.getJobPostingId())
             .orElseThrow(() -> new EntityNotFoundException());
-
-    jobPosting.updateViewCount(jobPosting.getViewCount() + 1);
 
     List<Quiz> quizzes = quizRepository.findAllById(dto.getQuizIds());
 
@@ -74,10 +71,13 @@ public class QuizServiceImpl implements QuizService {
 
 
   // 테스트 코드 누락
+  @Transactional
   @Override
   public List<QuizDto> findQuizByJobPostingId(long jobPostingId) {
-    JobPosting jobPosting = jobPostingRepository.findById(jobPostingId)
+    JobPosting jobPosting = jobPostingRepository.findByIdWithPessimisticWrite(jobPostingId)
             .orElseThrow(() -> new EntityNotFoundException());
+
+    jobPosting.updateViewCount(jobPosting.getViewCount() + 1);
 
     List<Quiz> quizzes = quizRepository.findAllByJobPosting(jobPosting);
 

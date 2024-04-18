@@ -57,7 +57,7 @@ public class QuizServiceImpl implements QuizService {
   @Transactional
   @Override
   public List<QuizDto> mapQuizToJobPosting(QuizToJobPostingDto dto) {
-    JobPosting jobPosting = jobPostingRepository.findById(dto.getJobPostingId())
+    JobPosting jobPosting = jobPostingRepository.findByIdWithPessimisticWrite(dto.getJobPostingId())
             .orElseThrow(() -> new EntityNotFoundException());
 
     jobPosting.updateViewCount(jobPosting.getViewCount() + 1);

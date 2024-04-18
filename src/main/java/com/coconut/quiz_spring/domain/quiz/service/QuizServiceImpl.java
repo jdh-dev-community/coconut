@@ -1,19 +1,19 @@
 package com.coconut.quiz_spring.domain.quiz.service;
 
 
+import com.coconut.quiz_spring.common.dto.ListReqDto;
 import com.coconut.quiz_spring.domain.jobposting.domain.JobPosting;
 import com.coconut.quiz_spring.domain.jobposting.repository.JobPostingRepository;
 import com.coconut.quiz_spring.domain.quiz.domain.Quiz;
-import com.coconut.quiz_spring.domain.quiz.dto.AnswerCreateReqDto;
-import com.coconut.quiz_spring.domain.quiz.dto.AnswerDto;
-import com.coconut.quiz_spring.domain.quiz.dto.QuizDto;
+import com.coconut.quiz_spring.domain.quiz.dto.*;
 import com.coconut.quiz_spring.domain.quiz.domain.mapper.QuizMapper;
-import com.coconut.quiz_spring.domain.quiz.dto.QuizToJobPostingDto;
 import com.coconut.quiz_spring.domain.quiz.repository.QuizRepository;
 import com.coconut.quiz_spring.domain.quiz.service.interfaces.OpenAiService;
 import com.coconut.quiz_spring.domain.quiz.service.interfaces.QuizService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +42,15 @@ public class QuizServiceImpl implements QuizService {
 
     result.updateQuizId(quiz.getQuiz_id());
     return result;
+  }
+
+  @Override
+  public QuizDto insertExternalQuiz(QuizDto dto) {
+    Quiz quiz = quizMapper.from(dto);
+    quizRepository.save(quiz);
+
+    dto.updateQuizId(quiz.getQuiz_id());
+    return dto;
   }
 
   @Transactional
@@ -84,5 +93,16 @@ public class QuizServiceImpl implements QuizService {
 
     AnswerDto answer = openAiService.generateAnswer(quiz.getQuiz_id(), quiz.getQuiz(), quiz.getKeywords(), dto.getAnswer());
     return answer;
+  }
+
+  @Override
+  public List<QuizDto> getQuizList(ListReqDto dto) {
+    Pageable pageable = dto.toPageable();
+    Page<Quiz> quizList = quizRepository.findAll(pageable);
+
+    return quizList.getContent().stream()
+            .map(QuizDto::from)
+            .toList();
+
   }
 }

@@ -1,20 +1,21 @@
 package com.coconut.quiz_spring.domain.quiz.controller;
 
 import com.coconut.quiz_spring.common.dto.CustomResponse;
-import com.coconut.quiz_spring.domain.quiz.dto.AnswerCreateReqDto;
-import com.coconut.quiz_spring.domain.quiz.dto.AnswerDto;
-import com.coconut.quiz_spring.domain.quiz.dto.QuizDto;
-import com.coconut.quiz_spring.domain.quiz.dto.QuizToJobPostingDto;
+import com.coconut.quiz_spring.common.dto.ListReqDto;
+import com.coconut.quiz_spring.domain.quiz.dto.*;
 import com.coconut.quiz_spring.domain.quiz.service.interfaces.QuizService;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 
 @Slf4j
@@ -67,10 +68,26 @@ public class QuizController {
   }
 
 
-  @GetMapping("/quiz")
-  public String testConnect() {
-    return "connected: >> ";
+  @Operation(summary = "퀴즈생성", description = "외부에서 생성된 퀴즈를 추가합니다.")
+  @ResponseStatus(HttpStatus.OK)
+  @PostMapping("/quiz/external")
+  public CustomResponse<QuizDto> insertExternalQuiz(@Valid @RequestBody QuizDto dto) {
+    QuizDto result = quizService.insertExternalQuiz(dto);
+    CustomResponse<QuizDto> response = CustomResponse.of(result);
+
+    return response;
   }
 
+  @Operation(summary = "퀴즈생성", description = "퀴즈 목록 조회")
+  @ResponseStatus(HttpStatus.OK)
+  @GetMapping("/quizzes")
+  public CustomResponse<List<QuizDto>> getQuizList(@Valid @ModelAttribute ListReqDto listReqDto) {
+    List<QuizDto> result = quizService.getQuizList(listReqDto);
+    CustomResponse<List<QuizDto>> response = CustomResponse.of(result);
+
+    return response;
+
+
+  }
 
 }

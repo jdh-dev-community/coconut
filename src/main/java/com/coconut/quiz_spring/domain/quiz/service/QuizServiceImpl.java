@@ -105,4 +105,9 @@ public class QuizServiceImpl implements QuizService {
             .toList();
 
   }
+
+  @Override
+  public void deleteAllQuiz() {
+    quizRepository.deleteAll();
+  }
 }

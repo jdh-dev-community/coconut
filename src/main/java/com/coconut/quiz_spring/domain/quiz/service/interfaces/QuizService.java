@@ -16,4 +16,5 @@ public interface QuizService {
   List<QuizDto> findQuizByJobPostingId(long jobPostingId);
   AnswerDto createAnswer(AnswerCreateReqDto dto);
   List<QuizDto> getQuizList(ListReqDto dto);
+  void deleteAllQuiz();
 }

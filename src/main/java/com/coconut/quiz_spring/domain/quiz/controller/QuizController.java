@@ -78,7 +78,7 @@ public class QuizController {
     return response;
   }
 
-  @Operation(summary = "퀴즈생성", description = "퀴즈 목록 조회")
+  @Operation(summary = "목록 조회", description = "퀴즈 목록 조회")
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/quizzes")
   public CustomResponse<List<QuizDto>> getQuizList(@Valid @ModelAttribute ListReqDto listReqDto) {
@@ -86,8 +86,14 @@ public class QuizController {
     CustomResponse<List<QuizDto>> response = CustomResponse.of(result);
 
     return response;
-
-
   }
+
+  @Operation(summary = "모든 퀴즈 삭제", description = "[주의] 모든 퀴즈를 삭제합니다.")
+  @ResponseStatus(HttpStatus.OK)
+  @DeleteMapping("/quizzes")
+  public void deleteAllQuiz() {
+    quizService.deleteAllQuiz();
+  }
+
 
 }

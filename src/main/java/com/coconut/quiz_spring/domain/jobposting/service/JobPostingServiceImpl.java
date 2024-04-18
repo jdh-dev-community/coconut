@@ -51,6 +51,10 @@ public class JobPostingServiceImpl implements JobPostingService {
     return ListResDto.of(page.getTotalElements(), contents);
   }
 
+  @Override
+  public void deleteAllJobPosting() {
+    jobPostingRepository.deleteAll();
+  }
 
   @Transactional
   @Override

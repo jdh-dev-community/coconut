@@ -35,6 +35,15 @@ public class JobPostingController {
     return response;
   }
 
+  @Operation(summary = "모든 채용공고 삭제", description = "[주의] 모든 채용 공고 목록을 삭제합니다.")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @DeleteMapping("/jobpostings")
+  public void deleteAllJobPosting() {
+    jobPostingService.deleteAllJobPosting();
+  }
+
+
+
   @Operation(summary = "채용공고 조회", description = "채용공고를 조회합니다.")
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/jobposting/{id}")

@@ -4,6 +4,7 @@ package com.coconut.quiz_spring.domain.quiz.service;
 import com.coconut.quiz_spring.common.dto.ListReqDto;
 import com.coconut.quiz_spring.domain.jobposting.domain.JobPosting;
 import com.coconut.quiz_spring.domain.jobposting.repository.JobPostingRepository;
+import com.coconut.quiz_spring.domain.jobposting.service.interfaces.JobPostingService;
 import com.coconut.quiz_spring.domain.quiz.domain.Quiz;
 import com.coconut.quiz_spring.domain.quiz.dto.*;
 import com.coconut.quiz_spring.domain.quiz.domain.mapper.QuizMapper;
@@ -33,7 +34,7 @@ public class QuizServiceImpl implements QuizService {
   private final QuizRepository quizRepository;
 
   private final JobPostingRepository jobPostingRepository;
-
+  
   @Override
   public QuizDto generateQuiz() {
     QuizDto result = openAiService.generateQuiz();
@@ -58,6 +59,8 @@ public class QuizServiceImpl implements QuizService {
   public List<QuizDto> mapQuizToJobPosting(QuizToJobPostingDto dto) {
     JobPosting jobPosting = jobPostingRepository.findById(dto.getJobPostingId())
             .orElseThrow(() -> new EntityNotFoundException());
+
+    jobPosting.updateViewCount(jobPosting.getViewCount() + 1);
 
     List<Quiz> quizzes = quizRepository.findAllById(dto.getQuizIds());
 

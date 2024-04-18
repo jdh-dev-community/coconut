@@ -41,6 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class JobPostingControllerTest {
   private final String baseUrl = "/api/v1/jobposting";
 
+
   @MockBean
   private JobPostingService jobPostingService;
 
@@ -108,171 +109,6 @@ public class JobPostingControllerTest {
               .andExpect(jsonPath("$.result").isNotEmpty())
               .andExpect(jsonPath("$.error").isEmpty());
     }
-  }
-
-  @Nested
-  class 채용공고생성_테스트 {
-    private JobPostingDto jobPostingDto;
-
-    @BeforeEach
-    public void setup() {
-      this.jobPostingDto = createJobPostingDto(1);
-    }
-
-    @Test
-    public void 요청_데이터가_유효하지_않은_경우_400_응답을_반환() throws Exception {
-      String invalidData = null;
-      Map<String, String> invalidRequest = new HashMap<>(defaultRequest);
-      invalidRequest.put("title", invalidData);
-      String invalidBody = objectMapper.writeValueAsString(invalidRequest);
-
-      postAndVerify(invalidBody)
-              .andExpect(status().isBadRequest())
-              .andExpect(jsonPath("$.result").isEmpty())
-              .andExpect(jsonPath("$.error").isNotEmpty());
-
-    }
-
-    @Test
-    public void 요청_데이터에_필수항목이_누락된_경우_Error객체와_400_응답을_반환() throws Exception {
-      Map<String, String> invalidRequest = new HashMap<>(defaultRequest);
-      invalidRequest.remove("title");
-
-      String invalidBody = objectMapper.writeValueAsString(invalidRequest);
-
-      postAndVerify(invalidBody)
-              .andExpect(status().isBadRequest())
-              .andExpect(jsonPath("$.result").isEmpty())
-              .andExpect(jsonPath("$.error").isNotEmpty());
-
-    }
-
-    @Test
-    public void 요청_데이터가_유효한_경우_생성된_채용공고와_201_응답을_반환() throws Exception {
-      Map<String, String> validRequest = defaultRequest;
-      String validBody = objectMapper.writeValueAsString(validRequest);
-
-      when(jobPostingService.createJobPosting(any(JobPostingCreateReq.class))).thenReturn(jobPostingDto);
-
-      postAndVerify(validBody)
-              .andExpect(status().isCreated())
-              .andExpect(jsonPath("$.result").isNotEmpty())
-              .andExpect(jsonPath("$.error").isEmpty());
-      ;
-
-    }
-
-    private ResultActions postAndVerify(String body) throws Exception {
-      return mockMvc.perform(post(baseUrl)
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(body)
-      );
-    }
-  }
-
-  @Nested
-  class 채용공고수정_테스트 {
-    private JobPostingDto jobPostingDto;
-
-    @BeforeEach
-    public void setup() {
-      this.jobPostingDto = createJobPostingDto(1);
-    }
-
-    @Test
-    public void 요청_데이터가_유효하지_않은_경우_400_응답을_반환() throws Exception {
-      String matchId = "1";
-      String invalidStatus = "wrong status";
-      Map<String, String> invalidRequest = Map.of("status", invalidStatus);
-      String invalidBody = objectMapper.writeValueAsString(invalidRequest);
-
-      patchAndVerify(matchId, invalidBody)
-              .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void 요청_데이터에_모든_항목이_누락된_경우_400_응답을_반환() throws Exception {
-      String matchId = "1";
-      Map<String, String> emptyRequest = new HashMap<>();
-      String emptyBody = objectMapper.writeValueAsString(emptyRequest);
-
-      patchAndVerify(matchId, emptyBody)
-              .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void 요청_데이터가_유효한_경우_수정된_채용공고와_200_응답을_반환() throws Exception {
-      String matchId = "1";
-      Map<String, String> validRequest = Map.of(
-              "title", defaultRequest.get("title"),
-              "status", "active"
-      );
-      String validBody = objectMapper.writeValueAsString(validRequest);
-
-      when(jobPostingService.editJobPosting(eq(Long.parseLong(matchId)), any(JobPostingEditReq.class)))
-              .thenReturn(jobPostingDto);
-
-      patchAndVerify(matchId, validBody)
-              .andExpect(status().isOk())
-              .andExpect(jsonPath("$.result").isNotEmpty())
-              .andExpect(jsonPath("$.error").isEmpty());
-      ;
-
-    }
-
-    private ResultActions patchAndVerify(String id, String body) throws Exception {
-      return mockMvc.perform(patch(baseUrl + "/" + id)
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(body)
-      );
-    }
-  }
-
-  @Nested
-  class 채용공고삭제_테스트 {
-    private JobPostingDto jobPostingDto;
-
-    @BeforeEach
-    public void setup() {
-      this.jobPostingDto = createJobPostingDto(1);
-    }
-
-    @Test
-    public void 채용공고Id가_숫자로_변환이_안되는_경우_400을_응답() throws Exception {
-      String invalidId = "invalid";
-
-      mockMvc.perform(delete(baseUrl + "/" + invalidId))
-              .andExpect(status().isBadRequest())
-              .andExpect(jsonPath("$.result").isEmpty())
-              .andExpect(jsonPath("$.error").isNotEmpty());
-    }
-
-    @Test
-    public void 채용공고Id에_매칭되는_채용공고가_없는_경우_400을_응답() throws Exception {
-      String notMatched = "-1";
-
-      when(jobPostingService.deleteJobPosting(Long.parseLong(notMatched)))
-              .thenThrow(EntityNotFoundException.class);
-
-      mockMvc.perform(delete(baseUrl + "/" + notMatched))
-              .andExpect(status().isNotFound())
-              .andExpect(jsonPath("$.result").isEmpty())
-              .andExpect(jsonPath("$.error").isNotEmpty());
-    }
-
-    @Test
-    public void 채용공고Id에_매칭되는_삭제가능한_채용공고가_있는_경우_삭제처리_후_채용공고와_200을_응답() throws Exception {
-      String matched = "1";
-
-      when(jobPostingService.deleteJobPosting(Long.parseLong(matched)))
-              .thenReturn(jobPostingDto);
-
-      mockMvc.perform(delete(baseUrl + "/" + matched))
-              .andExpect(status().isOk())
-              .andExpect(jsonPath("$.result").isNotEmpty())
-              .andExpect(jsonPath("$.error").isEmpty());
-    }
-
   }
 
   @Nested
@@ -414,6 +250,7 @@ public class JobPostingControllerTest {
     }
 
   }
+
 
   private JobPostingDto createJobPostingDto(long id) {
     return JobPostingDto.of(

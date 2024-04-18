@@ -35,7 +35,7 @@ public class QuizDto {
   }
 
   public static QuizDto from (Quiz quiz) {
-    long jobPosingId = !Objects.isNull(quiz.getJobPosting())
+    Long jobPosingId = !Objects.isNull(quiz.getJobPosting())
             ? quiz.getJobPosting().getJobPostingId()
             : null;
 

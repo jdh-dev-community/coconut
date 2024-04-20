@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -86,14 +87,7 @@ public class OpenAiServiceImpl implements OpenAiService {
     String key = openAiProperties.getApi().getKey();
     String model = openAiProperties.getApi().getModel();
 
-    String requestBody = String.format("""
-            {
-              "model": "%s",
-              "messages": [
-                { "role": "system", "content": "%s" },
-                { "role": "user", "content": "%s" }
-              ]
-            }""", model, guide, prompt);
+    String requestBody = createBody(model, guide, prompt);
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -102,6 +96,34 @@ public class OpenAiServiceImpl implements OpenAiService {
 
     return new HttpEntity<>(requestBody, headers);
   }
+
+//          바디 모양
+//            {
+//              "model": model,
+//              "messages": [
+//                { "role": "system", "content": guide },
+//                { "role": "user", "content": prompt }
+//              ]
+//            }
+  private String createBody(String model, String guide, String prompt) {
+
+    try {
+      // 메시지 리스트 생성
+      Map<String, String> systemMessage = Map.of("role", "system", "content", guide);
+      Map<String, String> userMessage = Map.of("role", "user", "content", prompt);
+      List<Map<String, String>> messages = List.of(systemMessage, userMessage);
+      Map<String, Object> jsonMap = Map.of("model", model, "messages", messages);
+
+      return objectMapper.writeValueAsString(jsonMap);
+    } catch (JsonProcessingException ex) {
+      log.error("$$ model: >> {}", model);
+      log.error("$$ guide: >> {}", guide);
+      log.error("$$ prompt: >> {}", prompt);
+      throw new IllegalArgumentException();
+    }
+  }
+
+
 
   private <T> T getContent(String responseBody, Class<T> dtoClass) {
     try {

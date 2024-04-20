@@ -72,6 +72,12 @@ public class OpenAiServiceImpl implements OpenAiService {
       throw new InvalidOpenAiKeyException(ex.getMessage(), ex.getStatusCode(), ex.getCause());
     } catch (HttpClientErrorException.TooManyRequests ex) {
       throw new ExceedOpenAiQuotaException(ex.getMessage(), ex.getStatusCode(), ex.getCause());
+    } catch (HttpClientErrorException.BadRequest ex) {
+      log.error("$$ bad request url: >> {}", url);
+      log.error("$$ bad request method: >> {}", method);
+      log.error("$$ bad request entity: >> {}", entity);
+      log.error("$$ bad request entity: >> {}", entity.getBody());
+      throw ex;
     }
   }
 

@@ -4,7 +4,6 @@ package com.coconut.quiz_spring.domain.quiz.service;
 import com.coconut.quiz_spring.common.dto.ListReqDto;
 import com.coconut.quiz_spring.domain.jobposting.domain.JobPosting;
 import com.coconut.quiz_spring.domain.jobposting.repository.JobPostingRepository;
-import com.coconut.quiz_spring.domain.jobposting.service.interfaces.JobPostingService;
 import com.coconut.quiz_spring.domain.quiz.domain.Answer;
 import com.coconut.quiz_spring.domain.quiz.domain.Quiz;
 import com.coconut.quiz_spring.domain.quiz.domain.mapper.AnswerMapper;

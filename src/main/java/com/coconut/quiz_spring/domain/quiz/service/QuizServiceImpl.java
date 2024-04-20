@@ -4,10 +4,12 @@ package com.coconut.quiz_spring.domain.quiz.service;
 import com.coconut.quiz_spring.common.dto.ListReqDto;
 import com.coconut.quiz_spring.domain.jobposting.domain.JobPosting;
 import com.coconut.quiz_spring.domain.jobposting.repository.JobPostingRepository;
-import com.coconut.quiz_spring.domain.jobposting.service.interfaces.JobPostingService;
+import com.coconut.quiz_spring.domain.quiz.domain.Answer;
 import com.coconut.quiz_spring.domain.quiz.domain.Quiz;
+import com.coconut.quiz_spring.domain.quiz.domain.mapper.AnswerMapper;
 import com.coconut.quiz_spring.domain.quiz.dto.*;
 import com.coconut.quiz_spring.domain.quiz.domain.mapper.QuizMapper;
+import com.coconut.quiz_spring.domain.quiz.repository.AnswerRepository;
 import com.coconut.quiz_spring.domain.quiz.repository.QuizRepository;
 import com.coconut.quiz_spring.domain.quiz.service.interfaces.OpenAiService;
 import com.coconut.quiz_spring.domain.quiz.service.interfaces.QuizService;
@@ -31,9 +33,13 @@ public class QuizServiceImpl implements QuizService {
 
   private final QuizMapper quizMapper;
 
+  private final AnswerMapper answerMapper;
+
   private final QuizRepository quizRepository;
 
   private final JobPostingRepository jobPostingRepository;
+
+  private final AnswerRepository answerRepository;
   
   @Override
   public QuizDto generateQuiz() {
@@ -93,13 +99,18 @@ public class QuizServiceImpl implements QuizService {
   }
 
 
+  @Transactional
   @Override
   public AnswerDto createAnswer(AnswerCreateReqDto dto) {
     Quiz quiz = quizRepository.findById(dto.getQuizId())
             .orElseThrow(() -> new EntityNotFoundException("일치하는 퀴즈가 없습니다. [id]: " + dto.getQuizId()));
 
-    AnswerDto answer = openAiService.generateAnswer(quiz.getQuiz_id(), quiz.getQuiz(), quiz.getKeywords(), dto.getAnswer());
-    return answer;
+    AnswerDto result = openAiService.generateAnswer(quiz.getQuiz_id(), quiz.getQuiz(), quiz.getKeywords(), dto.getAnswer());
+
+    Answer answer = answerMapper.from(dto, result.getScore());
+    answerRepository.save(answer);
+
+    return result;
   }
 
   @Override

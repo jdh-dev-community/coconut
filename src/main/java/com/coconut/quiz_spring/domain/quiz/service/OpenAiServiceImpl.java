@@ -90,8 +90,7 @@ public class OpenAiServiceImpl implements OpenAiService {
     String requestBody = createBody(model, guide, prompt);
 
     HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-    headers.set("Content-Type", "application/json");
+    headers.setContentType(MediaType.APPLICATION_JSON);
     headers.set("Authorization", "Bearer " + key);
 
     return new HttpEntity<>(requestBody, headers);

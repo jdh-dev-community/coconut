@@ -1,1 +1,3 @@
-rootProject.name = 'quiz_spring'
+rootProject.name = 'coconut'
+include 'quiz_service'
+

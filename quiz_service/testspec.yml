@@ -12,7 +12,7 @@ phases:
   pre_build:
     commands:
       - java -version
-      - aws s3 cp $REMOTE_PATH ./src/main/resources/application.yml
+      - aws s3 cp $REMOTE_PATH ./quiz_service/src/main/resources/application.yml
   build:
     commands:
       - ./gradlew test

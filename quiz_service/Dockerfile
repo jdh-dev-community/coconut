@@ -2,14 +2,18 @@ FROM eclipse-temurin:17-jdk
 
 WORKDIR /workspace/app
 
+# 필요한 파일과 디렉토리를 컨테이너로 복사
 COPY ./gradlew /workspace/app
 COPY ./settings.gradle /workspace/app
 COPY ./gradle   /workspace/app/gradle/
 COPY ./build.gradle /workspace/app
-COPY ./src /workspace/app/src/
 
-RUN ./gradlew build -x test
-RUN mv ./build/libs/quiz_spring-0.0.1-SNAPSHOT.jar /workspace/app/app.jar
+# 전역 프로젝트 및 quiz_service 소스 코드 복사
+COPY ./global /workspace/app/global
+COPY ./quiz_service /workspace/quiz_service
+
+RUN ./quiz_service/gradlew build -x test
+RUN mv ./quiz_service/build/libs/quiz_service-0.0.1-SNAPSHOT.jar /workspace/app/app.jar
 
 FROM eclipse-temurin:17-jre
 

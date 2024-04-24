@@ -1,6 +1,6 @@
 package com.coconut.quiz_service.domain.jobposting.dto;
 
-import com.coconut.quiz_service.common.utils.CustomObjectMapper;
+import com.coconut.global.utils.CustomObjectMapper;
 import com.coconut.quiz_service.domain.jobposting.constants.JobPostingAction;
 import lombok.*;
 

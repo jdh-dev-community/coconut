@@ -1,7 +1,7 @@
 package com.coconut.quiz_service.domain.quiz.controller;
 
-import com.coconut.quiz_service.common.dto.CustomResponse;
-import com.coconut.quiz_service.common.dto.ListReqDto;
+import com.coconut.global.dto.CustomResponse;
+import com.coconut.global.dto.ListReqDto;
 import com.coconut.quiz_service.domain.quiz.dto.QuizDto;
 import com.coconut.quiz_service.domain.quiz.dto.QuizToJobPostingDto;
 import com.coconut.quiz_service.domain.quiz.service.interfaces.QuizService;

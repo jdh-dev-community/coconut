@@ -1,4 +1,4 @@
-package com.coconut.quiz_service.common.dto;
+package com.coconut.global.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;

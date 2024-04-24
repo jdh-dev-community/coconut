@@ -1,7 +1,7 @@
-package com.coconut.quiz_service.common.advice;
+package com.coconut.global.advice;
 
-import com.coconut.quiz_service.common.dto.CustomResponse;
-import com.coconut.quiz_service.common.dto.HttpErrorInfo;
+import com.coconut.global.dto.CustomResponse;
+import com.coconut.global.dto.HttpErrorInfo;
 import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;

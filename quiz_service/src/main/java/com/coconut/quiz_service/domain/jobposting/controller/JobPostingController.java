@@ -1,8 +1,8 @@
 package com.coconut.quiz_service.domain.jobposting.controller;
 
-import com.coconut.quiz_service.common.dto.CustomResponse;
-import com.coconut.quiz_service.common.dto.ListReqDto;
-import com.coconut.quiz_service.common.dto.ListResDto;
+import com.coconut.global.dto.CustomResponse;
+import com.coconut.global.dto.ListReqDto;
+import com.coconut.global.dto.ListResDto;
 import com.coconut.quiz_service.domain.jobposting.dto.JobPostingDto;
 import com.coconut.quiz_service.domain.jobposting.service.interfaces.JobPostingService;
 import io.swagger.v3.oas.annotations.Operation;

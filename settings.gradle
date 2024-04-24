@@ -1,3 +1,4 @@
 rootProject.name = 'coconut'
 include 'quiz_service'
+include 'global'
 

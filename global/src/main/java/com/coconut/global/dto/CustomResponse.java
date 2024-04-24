@@ -1,4 +1,4 @@
-package com.coconut.quiz_service.common.dto;
+package com.coconut.global.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

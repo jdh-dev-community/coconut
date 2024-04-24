@@ -1,6 +1,6 @@
 package com.coconut.quiz_service.domain.jobposting.controller;
 
-import com.coconut.quiz_service.common.dto.CustomResponse;
+import com.coconut.global.dto.CustomResponse;
 import com.coconut.quiz_service.domain.jobposting.dto.JobPostingCreateReq;
 import com.coconut.quiz_service.domain.jobposting.dto.JobPostingDto;
 import com.coconut.quiz_service.domain.jobposting.dto.JobPostingEditReq;

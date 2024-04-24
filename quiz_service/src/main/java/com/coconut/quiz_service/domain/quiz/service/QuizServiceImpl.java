@@ -1,7 +1,7 @@
 package com.coconut.quiz_service.domain.quiz.service;
 
 
-import com.coconut.quiz_service.common.dto.ListReqDto;
+import com.coconut.global.dto.ListReqDto;
 import com.coconut.quiz_service.domain.jobposting.domain.JobPosting;
 import com.coconut.quiz_service.domain.jobposting.repository.JobPostingRepository;
 import com.coconut.quiz_service.domain.quiz.domain.Answer;

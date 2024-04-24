@@ -1,6 +1,6 @@
 package com.coconut.quiz_service.domain.quiz.controller;
 
-import com.coconut.quiz_service.common.dto.CustomResponse;
+import com.coconut.global.dto.CustomResponse;
 import com.coconut.quiz_service.domain.quiz.dto.*;
 import com.coconut.quiz_service.domain.quiz.service.interfaces.QuizService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,9 +1,9 @@
-package com.coconut.quiz_service.common.dto;
+package com.coconut.global.dto;
 
 
 
-import com.coconut.quiz_service.common.constant.OrderBy;
-import com.coconut.quiz_service.common.constant.SortBy;
+import com.coconut.global.constant.OrderBy;
+import com.coconut.global.constant.SortBy;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

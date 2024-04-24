@@ -1,4 +1,4 @@
-package com.coconut.quiz_service.common.constant;
+package com.coconut.global.constant;
 
 import java.util.Arrays;
 

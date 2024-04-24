@@ -1,4 +1,4 @@
-package com.coconut.quiz_service.common.config;
+package com.coconut.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,10 +1,10 @@
 package com.coconut.quiz_service.domain.jobposting.service;
 
-import com.coconut.quiz_service.common.constant.OrderBy;
-import com.coconut.quiz_service.common.constant.SortBy;
-import com.coconut.quiz_service.common.dto.ListReqDto;
-import com.coconut.quiz_service.common.dto.ListResDto;
-import com.coconut.quiz_service.common.utils.CustomObjectMapper;
+import com.coconut.global.constant.OrderBy;
+import com.coconut.global.constant.SortBy;
+import com.coconut.global.dto.ListReqDto;
+import com.coconut.global.dto.ListResDto;
+import com.coconut.global.utils.CustomObjectMapper;
 import com.coconut.quiz_service.domain.jobposting.constants.JobPostingAction;
 import com.coconut.quiz_service.domain.jobposting.constants.JobPostingStatus;
 import com.coconut.quiz_service.domain.jobposting.domain.JobPosting;

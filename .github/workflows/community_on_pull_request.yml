@@ -26,7 +26,7 @@ jobs:
 
       - name: Create application.yml
         run: |
-          echo -e "${{ secrets.APPLICATION_YML }}" > ./community/src/main/resources/application.yml
+          echo -e "${{ secrets.APPLICATION_YML }}" > ./community_service/src/main/resources/application.yml
 
       - name: Set up JDK 17
         uses: actions/setup-java@v2

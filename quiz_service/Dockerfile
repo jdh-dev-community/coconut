@@ -10,7 +10,7 @@ COPY ./build.gradle /workspace/app
 
 # 전역 프로젝트 및 quiz_service 소스 코드 복사
 COPY ./global /workspace/app/global
-COPY ./quiz_service /workspace/quiz_service
+COPY ./quiz_service /workspace/app/quiz_service
 
 RUN ./gradlew -p ./quiz_service build -x test
 RUN mv ./quiz_service/build/libs/quiz_service-0.0.1-SNAPSHOT.jar /workspace/app/app.jar

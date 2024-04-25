@@ -2,11 +2,14 @@ package com.coconut.global.advice;
 
 import com.coconut.global.dto.CustomResponse;
 import com.coconut.global.dto.HttpErrorInfo;
+import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
 import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,15 +17,64 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.OptimisticLockException;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+  @ResponseStatus(INTERNAL_SERVER_ERROR)
+  @ExceptionHandler(Exception.class)
+  public @ResponseBody CustomResponse handleAllException(WebRequest req, Exception ex) {
+    log.info("error handler: handleAllException");
+    HttpErrorInfo errorInfo = createHttpErrorInfo(INTERNAL_SERVER_ERROR, req, ex);
+    return CustomResponse.of(errorInfo);
+  }
+  @ResponseStatus(BAD_REQUEST)
+  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+  public @ResponseBody CustomResponse handleMethodArgumentTypeMismatchException(WebRequest req, MethodArgumentTypeMismatchException ex) {
+    log.info("error handler: handleMethodArgumentTypeMismatchException");
+    HttpErrorInfo errorInfo = createHttpErrorInfo(BAD_REQUEST, req, ex);
+    return CustomResponse.of(errorInfo);
+  }
+
+  @ResponseStatus(BAD_REQUEST)
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  public @ResponseBody CustomResponse handleHttpMessageNotReadableException(WebRequest req, HttpMessageNotReadableException ex) {
+    log.info("error handler: handleHttpMessageNotReadableException");
+    HttpErrorInfo errorInfo = createHttpErrorInfo(BAD_REQUEST, req, ex);
+    return CustomResponse.of(errorInfo);
+  }
+
+  @ResponseStatus(BAD_REQUEST)
+  @ExceptionHandler(ValueInstantiationException.class)
+  public @ResponseBody CustomResponse handleValueInstantiationExceptionException(WebRequest req, ValueInstantiationException ex) {
+    log.info("error handler: handleValueInstantiationExceptionException");
+    HttpErrorInfo errorInfo = createHttpErrorInfo(BAD_REQUEST, req, ex);
+    return CustomResponse.of(errorInfo);
+  }
+
+  @ResponseStatus(BAD_REQUEST)
+  @ExceptionHandler(OptimisticLockException.class)
+  public @ResponseBody CustomResponse handleOptimisticLockException(WebRequest req, OptimisticLockException ex) {
+    log.info("error handler: handleOptimisticLockException");
+    HttpErrorInfo errorInfo = createHttpErrorInfo(BAD_REQUEST, req, ex);
+    return CustomResponse.of(errorInfo);
+  }
+
+  @ResponseStatus(NOT_FOUND)
+  @ExceptionHandler(JpaObjectRetrievalFailureException.class)
+  public @ResponseBody CustomResponse handleJpaObjectRetrievalFailureException(WebRequest req, JpaObjectRetrievalFailureException ex) {
+    log.info("error handler: handleJpaObjectRetrievalFailureException");
+    HttpErrorInfo errorInfo = createHttpErrorInfo(NOT_FOUND, req, ex);
+    return CustomResponse.of(errorInfo);
+  }
 
   @ResponseStatus(BAD_REQUEST)
   @ExceptionHandler(InvalidDataAccessApiUsageException.class)

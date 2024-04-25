@@ -35,6 +35,11 @@ out/
 
 ### VS Code ###
 .vscode/
-scripts/
 
+
+## ENV
 **/src/main/resources/**.yml
+
+## Community
+/community_service/logs/
+/community_service/src/generated

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- 콘솔 애펜더 설정 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 모든 로그를 기록하는 파일 애펜더 -->
+    <appender name="FILE_APPENDER_ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/all-logs.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/all-logs-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+    </appender>
+
+    <!-- 필터 로그를 기록하는 애펜더 설정 -->
+    <appender name="FILE_APPENDER_FILTER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/filter-app.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/filter-app-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 모든 로그 비동기 애펜더 설정 -->
+    <appender name="ASYNC_ALL" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE_APPENDER_ALL"/>
+        <queueSize>512</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <!-- 필터 로그 비동기 애펜더 설정 -->
+    <appender name="ASYNC_FILTER" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE_APPENDER_FILTER"/>
+        <queueSize>512</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+
+    <!-- 루트 로거 설정 -->
+    <root level="info">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ASYNC_ALL"/>
+    </root>
+
+    <!-- 특정 로거에 대해 비동기 파일 로깅 활성화 -->
+    <logger name="com.jdh.community_spring.common.filter" level="info">
+        <appender-ref ref="ASYNC_FILTER"/>
+    </logger>
+</configuration>

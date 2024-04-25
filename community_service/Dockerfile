@@ -6,10 +6,13 @@ COPY ./gradlew /workspace/app
 COPY ./settings.gradle /workspace/app
 COPY ./gradle   /workspace/app/gradle/
 COPY ./build.gradle /workspace/app
-COPY ./src /workspace/app/src/
 
-RUN ./gradlew build -x test
-RUN mv ./build/libs/community_spring-0.0.1-SNAPSHOT.jar /workspace/app/app.jar
+# 전역 프로젝트 및 quiz_service 소스 코드 복사
+COPY ./global /workspace/app/global
+COPY ./quiz_service /workspace/app/community_service
+
+RUN ./gradlew :community_service:build -x test
+RUN mv ./build/libs/community_service-0.0.1-SNAPSHOT.jar /workspace/app/app.jar
 
 FROM eclipse-temurin:17-jre
 

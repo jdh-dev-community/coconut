@@ -5,7 +5,7 @@ phases:
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
   build:
     commands:
-      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG -f ./quiz_service/Dockerfile
+      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG -f ./quiz_service/Dockerfile ./
       - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
   post_build:
     commands:

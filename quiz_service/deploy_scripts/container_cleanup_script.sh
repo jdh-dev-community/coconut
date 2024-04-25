@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # sudo 미적용으로 사용자의 .bash_profile에서 환경변수 로드 가능
-echo "@@@@@ Clean up started @@@@@" >> /home/ec2-user/deploy.log
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] @@@@@ Clean up started @@@@@" >> /home/ec2-user/deploy.log
 
 source ~/.bash_profile
 
@@ -23,4 +23,4 @@ else
     echo "Image $IMAGE does not exist." >> /home/ec2-user/deploy.log
 fi
 
-echo "@@@@@ Clean up end @@@@@" >> /home/ec2-user/deploy.log
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] @@@@@ Clean up end @@@@@" >> /home/ec2-user/deploy.log

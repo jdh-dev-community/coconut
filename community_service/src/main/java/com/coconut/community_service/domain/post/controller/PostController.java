@@ -77,4 +77,12 @@ public class PostController {
     postService.deletePost(postId);
   }
 
+
+  @Operation(summary = "상태 체크",  description = "상태 체크 api 입니다.")
+  @ResponseStatus(HttpStatus.OK)
+  @DeleteMapping("/health")
+  public String checkHealth() {
+    return "Healthy";
+  }
+
 }

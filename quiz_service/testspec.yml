@@ -15,7 +15,7 @@ phases:
       - aws s3 cp $REMOTE_PATH ./quiz_service/src/main/resources/application.yml
   build:
     commands:
-      - ./gradlew test
+      - ./gradlew :quiz_service:test
 
 artifacts:
   files:

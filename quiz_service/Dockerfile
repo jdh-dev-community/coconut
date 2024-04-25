@@ -12,7 +12,7 @@ COPY ./build.gradle /workspace/app
 COPY ./global /workspace/app/global
 COPY ./quiz_service /workspace/app/quiz_service
 
-RUN ./gradlew -p ./quiz_service build -x test
+RUN ./gradlew :quiz_service:build -x test
 RUN mv ./quiz_service/build/libs/quiz_service-0.0.1-SNAPSHOT.jar /workspace/app/app.jar
 
 FROM eclipse-temurin:17-jre

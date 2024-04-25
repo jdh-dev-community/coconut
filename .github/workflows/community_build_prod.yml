@@ -1,4 +1,4 @@
-name: Build-prod
+name: community-build-prod
 
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
@@ -8,7 +8,7 @@ name: Build-prod
 on:
   push:
     branches:
-      - main
+      - community_service/main
       
 
 jobs:
@@ -30,17 +30,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Install the cosign tool except on PR
-      # https://github.com/sigstore/cosign-installer
-      - name: Install cosign
-        if: github.event_name != 'pull_request'
-        uses: sigstore/cosign-installer@6e04d228eb30da1757ee4e1dd75a0ec73a653e06 #v3.1.1
-        with:
-          cosign-release: 'v2.1.1'
-
       - name: Create application.yml
         run: |
-          echo -e "${{ secrets.APPLICATION_YML }}" > ./src/main/resources/application.yml
+          echo -e "${{ secrets.APPLICATION_YML }}" > ./community_service/src/main/resources/application.yml
 
       - name: Set up JDK 17
         uses: actions/setup-java@v2
@@ -52,7 +44,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build --no-daemon
+        run: ./gradlew :community_service:build --no-daemon
 
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache
@@ -92,26 +84,13 @@ jobs:
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
           context: .
+          file: ./community_service/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # Sign the resulting Docker image digest except on PRs.
-      # This will only write to the public Rekor transparency log when the Docker
-      # repository is public to avoid leaking data.  If you would like to publish
-      # transparency data even for private images, pass --force to cosign below.
-      # https://github.com/sigstore/cosign
-      - name: Sign the published Docker image
-        if: ${{ github.event_name != 'pull_request' }}
-        env:
-          # https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
-          TAGS: ${{ steps.meta.outputs.tags }}
-          DIGEST: ${{ steps.build-and-push.outputs.digest }}
-        # This step uses the identity token to provision an ephemeral certificate
-        # against the sigstore community Fulcio instance.
-        run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1

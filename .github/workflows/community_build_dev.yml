@@ -1,4 +1,4 @@
-name: Build-dev
+name: community-build-dev
 
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
@@ -8,7 +8,7 @@ name: Build-dev
 on:
   push:
     branches:
-      - dev
+      - community_service/dev
       
 
 jobs:
@@ -32,7 +32,7 @@ jobs:
 
       - name: Create application.yml
         run: |
-          echo -e "${{ secrets.APPLICATION_YML }}" > ./src/main/resources/application.yml
+          echo -e "${{ secrets.APPLICATION_YML }}" > ./community_service/src/main/resources/application.yml
 
       - name: Set up JDK 17
         uses: actions/setup-java@v2
@@ -44,7 +44,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build --no-daemon
+        run: ./gradlew :community_service:build --no-daemon
 
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache
@@ -84,6 +84,7 @@ jobs:
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
           context: .
+          file: ./community_service/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

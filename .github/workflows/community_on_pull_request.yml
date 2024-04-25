@@ -1,4 +1,4 @@
-name: on-pull-request
+name: community-on-pull-request
 
 on:
   pull_request:
@@ -26,7 +26,7 @@ jobs:
 
       - name: Create application.yml
         run: |
-          echo -e "${{ secrets.APPLICATION_YML }}" > ./src/main/resources/application.yml
+          echo -e "${{ secrets.APPLICATION_YML }}" > ./community/src/main/resources/application.yml
 
       - name: Set up JDK 17
         uses: actions/setup-java@v2
@@ -38,7 +38,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build --no-daemon
+        run: ./gradlew :community_service:build --no-daemon
 
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+        run: docker build . --file ./community_service/Dockerfile --tag my-image-name:$(date +%s)

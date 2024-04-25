@@ -12,10 +12,14 @@ phases:
   pre_build:
     commands:
       - java -version
-      - aws s3 cp $REMOTE_PATH ./src/main/resources/application.yml
+      - aws s3 cp $REMOTE_PATH ./quiz_service/src/main/resources/application.yml
   build:
     commands:
-      - ./gradlew test
+      - ./gradlew :quiz_service:test
+
+  post_build:
+    commands:
+      - cp ./quiz_service/appspec.yml ./appspec.yml
 
 artifacts:
   files:

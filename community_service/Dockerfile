@@ -12,7 +12,7 @@ COPY ./global /workspace/app/global
 COPY ./quiz_service /workspace/app/community_service
 
 RUN ./gradlew :community_service:build -x test
-RUN mv ./build/libs/community_service-0.0.1-SNAPSHOT.jar /workspace/app/app.jar
+RUN mv ./community_service/build/libs/community_service-0.0.1-SNAPSHOT.jar /workspace/app/app.jar
 
 FROM eclipse-temurin:17-jre
 

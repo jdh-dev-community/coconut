@@ -57,7 +57,7 @@
     </root>
 
     <!-- 특정 로거에 대해 비동기 파일 로깅 활성화 -->
-    <logger name="com.jdh.community_spring.common.filter" level="info">
+    <logger name="com.jdh.community_service.common.filter" level="info">
         <appender-ref ref="ASYNC_FILTER"/>
     </logger>
 </configuration>

@@ -1,7 +1,7 @@
 package com.coconut.community_service.domain.post.dto;
 
 import com.coconut.community_service.common.constant.PostCategory;
-import com.coconut.community_service.common.dto.ListResDto;
+import com.coconut.global.dto.ListResDto;
 import com.coconut.community_service.domain.post.domain.Post;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;

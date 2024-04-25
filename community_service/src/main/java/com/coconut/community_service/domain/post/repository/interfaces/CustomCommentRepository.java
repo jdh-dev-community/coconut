@@ -1,4 +1,4 @@
-package com.coconut.community_service.domain.post.repository;
+package com.coconut.community_service.domain.post.repository.interfaces;
 
 import com.coconut.community_service.domain.post.domain.Comment;
 import com.coconut.community_service.domain.post.dto.CommentDto;

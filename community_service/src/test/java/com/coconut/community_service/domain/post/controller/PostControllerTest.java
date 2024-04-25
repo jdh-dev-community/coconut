@@ -5,7 +5,7 @@ import com.coconut.community_service.common.filter.TokenFilter;
 import com.coconut.community_service.common.provider.InMemoryDBProvider;
 import com.coconut.community_service.common.util.SimpleEncrypt;
 import com.coconut.community_service.domain.post.domain.Post;
-import com.coconut.community_service.domain.post.repository.PostRepository;
+import com.coconut.community_service.domain.post.repository.interfaces.PostRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;

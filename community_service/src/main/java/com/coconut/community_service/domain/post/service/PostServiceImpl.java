@@ -1,22 +1,23 @@
-package com.coconut.community_service.domain.post.service.impls;
+package com.coconut.community_service.domain.post.service;
 
 import com.coconut.community_service.domain.post.domain.Post;
 import com.coconut.community_service.domain.post.domain.mapper.PostMapper;
 import com.coconut.community_service.domain.post.dto.*;
-import com.coconut.community_service.domain.post.service.CommentService;
-import com.coconut.community_service.domain.post.service.PostService;
-import com.coconut.community_service.common.constant.OrderBy;
-import com.coconut.community_service.common.constant.SortBy;
-import com.coconut.community_service.common.dto.ListReqDto;
+import com.coconut.community_service.domain.post.service.interfaces.CommentService;
+import com.coconut.community_service.domain.post.service.interfaces.PostService;
+import com.coconut.global.constant.OrderBy;
+import com.coconut.global.constant.SortBy;
+import com.coconut.global.dto.ListReqDto;
 import com.coconut.community_service.common.provider.InMemoryDBProvider;
 import com.coconut.community_service.common.util.SimpleEncrypt;
-import com.coconut.community_service.common.dto.ListResDto;
-import com.coconut.community_service.domain.post.repository.PostRepository;
+import com.coconut.global.dto.ListResDto;
+import com.coconut.community_service.domain.post.repository.interfaces.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
@@ -42,7 +43,7 @@ public class PostServiceImpl implements PostService {
     Pageable pageable = listReqDto.toPageable();
     Page<PostCommentCountDto> post = postRepository.findAllPostWithCommentCount(pageable);
 
-    return new ListResDto<>(post.getTotalElements(), post.getContent());
+    return  ListResDto.of(post.getTotalElements(), post.getContent());
   }
 
   @Transactional
@@ -54,7 +55,7 @@ public class PostServiceImpl implements PostService {
     post.updateViewCount();
     postRepository.save(post);
 
-    ListReqDto dto = ListReqDto.of(1, 10, SortBy.RECENT, OrderBy.DESC);
+    ListReqDto dto = ListReqDto.of(1, 10, SortBy.RECENT, OrderBy.DESC, null);
     ListResDto<CommentDto> comments = commentService.getCommentList(postId, dto);
 
     return PostCommentsDto.of(post, comments);

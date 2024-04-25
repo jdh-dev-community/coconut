@@ -39,7 +39,7 @@ out/
 
 ## ENV
 **/src/main/resources/**.yml
+**/src/generated
 
 ## Community
 /community_service/logs/
-/community_service/src/generated

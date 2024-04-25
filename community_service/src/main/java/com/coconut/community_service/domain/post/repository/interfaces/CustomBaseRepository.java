@@ -1,4 +1,4 @@
-package com.coconut.community_service.domain.post.repository;
+package com.coconut.community_service.domain.post.repository.interfaces;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;

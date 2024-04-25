@@ -3,7 +3,7 @@ package com.coconut.community_service.domain.post.controller;
 import com.coconut.community_service.common.constant.PostCategory;
 import com.coconut.community_service.common.util.SimpleEncrypt;
 import com.coconut.community_service.domain.post.domain.Post;
-import com.coconut.community_service.domain.post.repository.PostRepository;
+import com.coconut.community_service.domain.post.repository.interfaces.PostRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

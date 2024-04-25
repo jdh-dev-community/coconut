@@ -1,7 +1,7 @@
-package com.coconut.community_service.domain.post.service;
+package com.coconut.community_service.domain.post.service.interfaces;
 
-import com.coconut.community_service.common.dto.ListReqDto;
-import com.coconut.community_service.common.dto.ListResDto;
+import com.coconut.global.dto.ListReqDto;
+import com.coconut.global.dto.ListResDto;
 import com.coconut.community_service.domain.post.dto.*;
 
 public interface PostService {

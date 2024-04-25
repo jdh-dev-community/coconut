@@ -1,12 +1,12 @@
-package com.coconut.community_service.domain.post.repository.impls;
+package com.coconut.community_service.domain.post.repository;
 
 
 import com.coconut.community_service.domain.post.domain.Post;
 import com.coconut.community_service.domain.post.domain.QComment;
 import com.coconut.community_service.domain.post.domain.QPost;
 import com.coconut.community_service.domain.post.dto.PostCommentCountDto;
-import com.coconut.community_service.domain.post.repository.CustomBaseRepository;
-import com.coconut.community_service.domain.post.repository.CustomPostRepository;
+import com.coconut.community_service.domain.post.repository.interfaces.CustomBaseRepository;
+import com.coconut.community_service.domain.post.repository.interfaces.CustomPostRepository;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.PathBuilder;
@@ -17,18 +17,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class CustomPostRepositoryImpl implements CustomPostRepository, CustomBaseRepository {
+@Repository
+public class PostRepositoryImpl implements CustomPostRepository, CustomBaseRepository {
 
   private final JPAQueryFactory jpaQueryFactory;
   private final PathBuilder<Post> entityPath;
 
-  public CustomPostRepositoryImpl(JPAQueryFactory jpaQueryFactory) {
+  public PostRepositoryImpl(JPAQueryFactory jpaQueryFactory) {
     this.jpaQueryFactory = jpaQueryFactory;
     this.entityPath = new PathBuilder<>(Post.class, "post");
   }

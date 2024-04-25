@@ -1,4 +1,4 @@
-package com.coconut.community_service.domain.post.service.impls;
+package com.coconut.community_service.domain.post.service;
 
 
 import com.coconut.community_service.domain.post.domain.Comment;
@@ -8,15 +8,15 @@ import com.coconut.community_service.domain.post.dto.CommentCreateReqDto;
 import com.coconut.community_service.domain.post.dto.CommentDto;
 import com.coconut.community_service.domain.post.dto.TokenReqDto;
 import com.coconut.community_service.domain.post.dto.TokenResDto;
-import com.coconut.community_service.domain.post.service.CommentService;
-import com.coconut.community_service.common.dto.ListReqDto;
-import com.coconut.community_service.common.dto.ListResDto;
+import com.coconut.community_service.domain.post.service.interfaces.CommentService;
+import com.coconut.global.dto.ListReqDto;
+import com.coconut.global.dto.ListResDto;
 import com.coconut.community_service.common.provider.InMemoryDBProvider;
 import com.coconut.community_service.common.util.SimpleEncrypt;
 import com.coconut.community_service.domain.post.domain.mapper.CommentMapper;
-import com.coconut.community_service.domain.post.repository.CommentRepository;
-import com.coconut.community_service.domain.post.repository.CommentStatusRepository;
-import com.coconut.community_service.domain.post.repository.PostRepository;
+import com.coconut.community_service.domain.post.repository.interfaces.CommentRepository;
+import com.coconut.community_service.domain.post.repository.interfaces.CommentStatusRepository;
+import com.coconut.community_service.domain.post.repository.interfaces.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -55,7 +55,7 @@ public class CommentServiceImpl implements CommentService {
     Page<Comment> comments = commentRepository.findAllByParentCommentId(commentId, pageable);
     List<CommentDto> commentDtos = comments.stream().map(CommentDto::from).collect(Collectors.toList());
 
-    return new ListResDto<>(comments.getTotalElements(), commentDtos);
+    return ListResDto.of(comments.getTotalElements(), commentDtos);
   }
 
   @Override
@@ -63,7 +63,7 @@ public class CommentServiceImpl implements CommentService {
     Pageable pageable = dto.toPageable();
     Page<CommentDto> comments = commentRepository.findCommentsByPostId(postId, pageable);
 
-    return new ListResDto<>(comments.getTotalElements(), comments.getContent());
+    return ListResDto.of(comments.getTotalElements(), comments.getContent());
   }
 
   @Override

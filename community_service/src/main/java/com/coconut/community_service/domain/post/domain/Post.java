@@ -1,7 +1,7 @@
 package com.coconut.community_service.domain.post.domain;
 
 import com.coconut.community_service.common.constant.PostCategory;
-import com.coconut.community_service.common.domain.BaseEntity;
+import com.coconut.global.domain.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 

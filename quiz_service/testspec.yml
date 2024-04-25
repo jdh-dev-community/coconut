@@ -17,6 +17,10 @@ phases:
     commands:
       - ./gradlew :quiz_service:test
 
+  post_build:
+    commands:
+      - cp ./quiz_service/appspec.yml ./appspec.yml
+
 artifacts:
   files:
     - '**/*'

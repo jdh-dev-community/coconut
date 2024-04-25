@@ -46,7 +46,7 @@ jobs:
         run: ./gradlew :community_service:build --no-daemon
 
       - name: Log into registry
-        run: docker login -u ${{ secrets.DOCKER_HUB_ID }} -p ${{ secrets.DOCKER_HUB_TOKEN }}
+        run: docker login ${{ secrets.DOCKER_HUB_REGISTRY }} -u ${{ secrets.DOCKER_HUB_ID }} -p ${{ secrets.DOCKER_HUB_TOKEN }}
 
       - name: docker build
         run: docker build -t ${{ secrets.DOCKER_HUB_ID }}/${{ secrets.DOCKER_HUB_REPO }}:latest -f ./community_service/Dockerfile ./

@@ -8,7 +8,7 @@ name: community-build-dev
 on:
   push:
     branches:
-      - community_service/dev
+      - community_service/cicd
 
 jobs:
   build:
@@ -29,9 +29,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Create application.yml
-        run: |
-          echo -e "${{ secrets.APPLICATION_YML }}" > ./community_service/src/main/resources/application.yml
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Install AWS CLI
+        run: sudo apt-get install awscli
+
+      - name: Copy application.yml from S3
+        run: aws s3 cp ${{ secrets.APPLICATION_YML_LINK }} ./community_service/src/main/resources/application.yml
 
       - name: Set up JDK 17
         uses: actions/setup-java@v2
@@ -54,12 +63,7 @@ jobs:
       - name: docker push
         run: docker push ${{ secrets.DOCKER_HUB_ID }}/${{ secrets.DOCKER_HUB_REPO }}:latest
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+
 
       - name: Test SSH Connection
         env:

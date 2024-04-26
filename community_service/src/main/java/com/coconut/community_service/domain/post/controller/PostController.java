@@ -80,7 +80,7 @@ public class PostController {
 
   @Operation(summary = "상태 체크",  description = "상태 체크 api 입니다.")
   @ResponseStatus(HttpStatus.OK)
-  @DeleteMapping("/health")
+  @GetMapping("/health")
   public String checkHealth() {
     return "Healthy";
   }

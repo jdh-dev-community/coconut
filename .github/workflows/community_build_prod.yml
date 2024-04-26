@@ -85,7 +85,7 @@ jobs:
           sudo docker rmi  ${{ secrets.DOCKER_HUB_ID }}/${{ secrets.DOCKER_HUB_REPO }}
 
           sudo docker pull  ${{ secrets.DOCKER_HUB_ID }}/${{ secrets.DOCKER_HUB_REPO }}
-          sudo docker run -d -p 80:8080 -e SPRING_PROFILES_ACTIVE=dev --name app  ${{ secrets.DOCKER_HUB_ID }}/${{ secrets.DOCKER_HUB_REPO }}
+          sudo docker run -d -p 80:8080 -e SPRING_PROFILES_ACTIVE=prod --name app  ${{ secrets.DOCKER_HUB_ID }}/${{ secrets.DOCKER_HUB_REPO }}
 
           EOF
 

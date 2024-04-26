@@ -8,7 +8,7 @@ name: community-build-dev
 on:
   push:
     branches:
-      - community_service/dev
+      - community_service/cicd
 
 jobs:
   build:
@@ -61,23 +61,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: excuting remote ssh commands
-        uses: appleboy/ssh-action@v0.1.6 # ssh 접속하는 오픈소스
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: 22
-          script: | # 실행할 스크립트
-            echo "hello"
-
-
       - name: Test SSH Connection
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
         run: |
           # SSH 키를 파일로 저장하고 권한 설정
-          echo "$SSH_KEY" | base64 -d > ec2-key.pem
+          echo "$SSH_KEY" > ec2-key.pem
           chmod 400 ec2-key.pem
 
           ssh -i "ec2-key.pem" -o StrictHostKeyChecking=no ${{secrets.EC2_USER}}@${{secrets.EC2_HOST}} << EOF

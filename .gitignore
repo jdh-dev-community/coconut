@@ -42,4 +42,4 @@ out/
 **/src/generated
 
 ## Community
-/community_service/logs/
+/community_service/logs/*

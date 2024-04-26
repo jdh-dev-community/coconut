@@ -61,6 +61,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: excuting remote ssh commands
+        uses: appleboy/ssh-action@v0.1.6 # ssh 접속하는 오픈소스
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: | # 실행할 스크립트
+            echo "hello"
+
+
       - name: Test SSH Connection
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
@@ -73,15 +84,6 @@ jobs:
           echo "hello world"
           EOF
 
-      - name: excuting remote ssh commands
-        uses: appleboy/ssh-action@v0.1.6 # ssh 접속하는 오픈소스
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: 22
-          script: | # 실행할 스크립트
-            echo "hello"
 
       - name: Execute SSH Command
         env:

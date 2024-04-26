@@ -11,18 +11,21 @@ plugins {
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
-group = 'com.coconut.global'
+group = 'com.coconut.community_service'
 version = '0.0.1-SNAPSHOT'
 
+
 dependencies {
+    implementation project(':global')
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     implementation 'com.mysql:mysql-connector-j:8.1.0'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+    implementation 'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20220608.1'
 }
 
 def querydslDir = "$projectDir/src/generated/querydsl"
@@ -31,7 +34,6 @@ querydsl {
     jpa = true
     querydslSourcesDir = querydslDir
 }
-
 
 sourceSets {
     main.java.srcDir querydslDir
@@ -47,4 +49,8 @@ configurations {
 
 clean {
     delete file(querydslDir)
+}
+
+tasks.named('bootRun') {
+    dependsOn 'compileQuerydsl'
 }

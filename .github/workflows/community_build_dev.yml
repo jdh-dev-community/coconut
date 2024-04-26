@@ -74,12 +74,7 @@ jobs:
 
 
       - name: Execute SSH Command
-        env:
-          SSH_KEY: ${{ secrets.SSH_KEY }}
         run: |
-          echo "$SSH_KEY" > ec2-key.pem
-          chmod 400 ec2-key.pem
-
           ssh -i "ec2-key.pem" -o StrictHostKeyChecking=no ${{secrets.EC2_USER}}@${{secrets.EC2_HOST}} << EOF
           sudo docker login docker.io -u ${{secrets.DOCKER_HUB_ID}} -p ${{secrets.DOCKER_HUB_TOKEN}}
           sudo docker stop app

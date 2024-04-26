@@ -8,7 +8,7 @@ name: community-build-dev
 on:
   push:
     branches:
-      - community_service/cicd
+      - community_service/dev
 
 jobs:
   build:

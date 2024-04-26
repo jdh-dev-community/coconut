@@ -46,50 +46,14 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew :community_service:build --no-daemon
 
-      # Set up BuildKit Docker container builder to be able to build
-      # multi-platform images and export cache
-      # https://github.com/docker/setup-buildx-action
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0
+      - name: Log into registry
+        run: docker login ${{ secrets.DOCKER_HUB_REGISTRY }} -u ${{ secrets.DOCKER_HUB_ID }} -p ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      # Login against a Docker registry except on PR
-      # https://github.com/docker/login-action
-      - name: Log into registry ${{ env.REGISTRY }}
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
-        with:
-          registry: ${{ secrets.DOCKER_HUB_REGISTRY }}
-          username: ${{ secrets.DOCKER_HUB_ID }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: docker build
+        run: docker build -t ${{ secrets.DOCKER_HUB_ID }}/${{ secrets.DOCKER_HUB_REPO }}:latest -f ./community_service/Dockerfile ./
 
-      - name: Verify Docker login
-        run: |
-          docker info
-          docker images     
-
-      # Extract metadata (tags, labels) for Docker
-      # https://github.com/docker/metadata-action
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
-        with:
-          images: ${{ secrets.DOCKER_HUB_REGISTRY }}/${{ secrets.DOCKER_HUB_REPO }}
-          tags: latest
-            
-          
-      # Build and push Docker image with Buildx (don't push on PR)
-      # https://github.com/docker/build-push-action
-      - name: Build and push Docker image
-        id: build-and-push
-        uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
-        with:
-          context: .
-          file: ./community_service/Dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      - name: docker push
+        run: docker push ${{ secrets.DOCKER_HUB_ID }}/${{ secrets.DOCKER_HUB_REPO }}:latest
 
 
       - name: Configure AWS credentials
@@ -99,26 +63,30 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-  
-      - name: Execute SSH Command
+      - name: Test SSH Connection
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
         run: |
-          # SSH 키를 파일로 저장하고 권한 설정
-          echo "$SSH_KEY" > ec2-key-prod.pem
-          chmod 600 ec2-key-prod.pem
+          echo "$SSH_KEY" > ec2-key.pem
+          chmod 400 ec2-key.pem
 
-          ssh -i ec2-key-prod.pem -o StrictHostKeyChecking=no ${{secrets.EC2_HOST}} << EOF
-          sudo docker login -u ${{secrets.DOCKER_HUB_ID}} -p ${{secrets.DOCKER_HUB_TOKEN}}
+          ssh -i "ec2-key.pem" -o StrictHostKeyChecking=no ${{secrets.EC2_USER}}@${{secrets.EC2_HOST}} << EOF
+          echo "hello world"
+          EOF
+
+      - name: Execute SSH Command
+        run: |
+          ssh -i "ec2-key.pem" -o StrictHostKeyChecking=no ${{secrets.EC2_USER}}@${{secrets.EC2_HOST}} << EOF
+          sudo docker login docker.io -u ${{secrets.DOCKER_HUB_ID}} -p ${{secrets.DOCKER_HUB_TOKEN}}
           sudo docker stop app
           sudo docker rm app
-          sudo docker rmi ${{secrets.DOCKER_HUB_REPO}}
+          sudo docker rmi  ${{ secrets.DOCKER_HUB_ID }}/${{ secrets.DOCKER_HUB_REPO }}
 
-          sudo docker pull ${{secrets.DOCKER_HUB_REPO}}
-          sudo docker run -d -p 80:8080 -e SPRING_PROFILES_ACTIVE=prod --name app teamjdh/dev-community-prod
+          sudo docker pull  ${{ secrets.DOCKER_HUB_ID }}/${{ secrets.DOCKER_HUB_REPO }}
+          sudo docker run -d -p 80:8080 -e SPRING_PROFILES_ACTIVE=dev --name app  ${{ secrets.DOCKER_HUB_ID }}/${{ secrets.DOCKER_HUB_REPO }}
 
           EOF
 
-          rm -f ec2-key-prod.pem
-
+          rm -f ec2-key.pem
+          
           

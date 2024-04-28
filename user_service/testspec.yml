@@ -1,0 +1,26 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      # unzip 설치
+      - apt-get update
+      - apt-get install -y unzip
+      # AWS CLI v2 설치
+      - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      - unzip awscliv2.zip
+      - ./aws/install
+  pre_build:
+    commands:
+      - java -version
+      - aws s3 cp $REMOTE_PATH ./user_service/src/main/resources/application.yml
+  build:
+    commands:
+      - ./gradlew :user_service:test
+
+  post_build:
+    commands:
+      - cp ./user_service/appspec.yml ./appspec.yml
+
+artifacts:
+  files:
+    - '**/*'

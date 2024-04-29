@@ -25,7 +25,6 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @Order(ControllerAdviceOrder.GLOBAL)
 public class GlobalExceptionAdvice extends BaseControllerAdvice {
 
-
   @ResponseStatus(BAD_REQUEST)
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
   public @ResponseBody CustomResponse handleMethodArgumentTypeMismatchException(WebRequest req, MethodArgumentTypeMismatchException ex) {

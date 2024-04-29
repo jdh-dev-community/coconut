@@ -29,13 +29,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-  @ResponseStatus(INTERNAL_SERVER_ERROR)
-  @ExceptionHandler(Exception.class)
-  public @ResponseBody CustomResponse handleAllException(WebRequest req, Exception ex) {
-    log.info("error handler: handleAllException");
-    HttpErrorInfo errorInfo = createHttpErrorInfo(INTERNAL_SERVER_ERROR, req, ex);
-    return CustomResponse.of(errorInfo);
-  }
+
   @ResponseStatus(BAD_REQUEST)
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
   public @ResponseBody CustomResponse handleMethodArgumentTypeMismatchException(WebRequest req, MethodArgumentTypeMismatchException ex) {
@@ -127,6 +121,14 @@ public class GlobalExceptionHandler {
       errorInfo = createHttpErrorInfo(BAD_REQUEST, req, ex);
     }
 
+    return CustomResponse.of(errorInfo);
+  }
+
+  @ResponseStatus(INTERNAL_SERVER_ERROR)
+  @ExceptionHandler(Exception.class)
+  public @ResponseBody CustomResponse handleAllException(WebRequest req, Exception ex) {
+    log.info("error handler: handleAllException");
+    HttpErrorInfo errorInfo = createHttpErrorInfo(INTERNAL_SERVER_ERROR, req, ex);
     return CustomResponse.of(errorInfo);
   }
 

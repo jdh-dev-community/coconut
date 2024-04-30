@@ -1,9 +1,12 @@
 package com.coconut.jpa_utils.advice;
 
 import com.coconut.global.advice.BaseControllerAdvice;
+import com.coconut.global.constant.ControllerAdviceOrder;
 import com.coconut.global.dto.CustomResponse;
 import com.coconut.global.dto.HttpErrorInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,6 +23,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 
 @Slf4j
+@Order(ControllerAdviceOrder.SHARE)
 @ControllerAdvice
 public class JPAExceptionAdvice extends BaseControllerAdvice {
   @ResponseStatus(BAD_REQUEST)

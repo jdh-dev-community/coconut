@@ -1,10 +1,12 @@
 package com.coconut.global.advice;
 
+import com.coconut.global.constant.ControllerAdviceOrder;
 import com.coconut.global.dto.CustomResponse;
 import com.coconut.global.dto.HttpErrorInfo;
 import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -20,6 +22,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Slf4j
 @ControllerAdvice
+@Order(ControllerAdviceOrder.GLOBAL)
 public class GlobalExceptionAdvice extends BaseControllerAdvice {
 
   @ResponseStatus(INTERNAL_SERVER_ERROR)

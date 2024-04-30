@@ -1,0 +1,18 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ec2-user/auth_service
+hooks:
+  BeforeInstall:
+    - location: ./auth_service/deploy_scripts/host_cleanup_script.sh
+      timeout: 300
+      runas: ec2-user
+  AfterInstall:
+    - location: ./auth_service/deploy_scripts/container_cleanup_script.sh
+      timeout: 300
+      runas: ec2-user
+  ApplicationStart:
+    - location: ./auth_service/deploy_scripts/start_script.sh
+      timeout: 300
+      runas: ec2-user

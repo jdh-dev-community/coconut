@@ -4,4 +4,5 @@ include 'global'
 include 'community_service'
 include 'jpa_utils'
 include 'user_service'
+include 'auth_service'
 

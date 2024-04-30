@@ -10,6 +10,7 @@ COPY ./build.gradle /workspace/app
 
 # 전역 프로젝트 및 quiz_service 소스 코드 복사
 COPY ./global /workspace/app/global
+COPY ./jpa_utils /workspace/app/jpa_utils
 COPY ./user_service /workspace/app/user_service
 
 RUN ./gradlew :user_service:build -x test

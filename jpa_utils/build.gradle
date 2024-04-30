@@ -10,7 +10,7 @@ plugins {
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
-group = 'com.coconut.global'
+group = 'com.coconut.jpa_utils'
 version = '0.0.1-SNAPSHOT'
 
 dependencies {

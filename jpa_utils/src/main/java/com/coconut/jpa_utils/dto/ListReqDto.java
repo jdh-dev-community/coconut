@@ -1,4 +1,4 @@
-package com.coconut.global.dto;
+package com.coconut.jpa_utils.dto;
 
 
 

@@ -1,4 +1,4 @@
-package com.coconut.global.dto;
+package com.coconut.jpa_utils.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;

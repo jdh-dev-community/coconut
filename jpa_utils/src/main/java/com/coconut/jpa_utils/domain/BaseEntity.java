@@ -1,4 +1,4 @@
-package com.coconut.global.domain;
+package com.coconut.jpa_utils.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

@@ -2,8 +2,8 @@ package com.coconut.community_service.domain.post.controller;
 
 import com.coconut.community_service.domain.post.dto.*;
 import com.coconut.community_service.domain.post.service.interfaces.PostService;
-import com.coconut.global.dto.ListReqDto;
-import com.coconut.global.dto.ListResDto;
+import com.coconut.jpa_utils.dto.ListReqDto;
+import com.coconut.jpa_utils.dto.ListResDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;

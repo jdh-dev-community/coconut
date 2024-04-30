@@ -7,10 +7,10 @@ import com.coconut.community_service.domain.post.service.interfaces.CommentServi
 import com.coconut.community_service.domain.post.service.interfaces.PostService;
 import com.coconut.global.constant.OrderBy;
 import com.coconut.global.constant.SortBy;
-import com.coconut.global.dto.ListReqDto;
+import com.coconut.jpa_utils.dto.ListReqDto;
 import com.coconut.community_service.common.provider.InMemoryDBProvider;
 import com.coconut.community_service.common.util.SimpleEncrypt;
-import com.coconut.global.dto.ListResDto;
+import com.coconut.jpa_utils.dto.ListResDto;
 import com.coconut.community_service.domain.post.repository.interfaces.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

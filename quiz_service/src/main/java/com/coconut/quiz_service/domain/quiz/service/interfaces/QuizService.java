@@ -1,5 +1,5 @@
 package com.coconut.quiz_service.domain.quiz.service.interfaces;
-import com.coconut.global.dto.ListReqDto;
+import com.coconut.jpa_utils.dto.ListReqDto;
 import com.coconut.quiz_service.domain.quiz.dto.AnswerCreateReqDto;
 import com.coconut.quiz_service.domain.quiz.dto.AnswerDto;
 import com.coconut.quiz_service.domain.quiz.dto.QuizDto;

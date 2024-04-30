@@ -1,6 +1,6 @@
 package com.coconut.quiz_service.domain.jobposting.domain;
 
-import com.coconut.global.domain.BaseEntity;
+import com.coconut.jpa_utils.domain.BaseEntity;
 import com.coconut.quiz_service.domain.jobposting.constants.JobPostingStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;

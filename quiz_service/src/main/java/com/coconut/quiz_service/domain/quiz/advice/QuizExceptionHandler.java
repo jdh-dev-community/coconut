@@ -1,11 +1,14 @@
 package com.coconut.quiz_service.domain.quiz.advice;
 
+import com.coconut.global.advice.BaseControllerAdvice;
+import com.coconut.global.constant.ControllerAdviceOrder;
 import com.coconut.global.dto.CustomResponse;
 import com.coconut.global.dto.HttpErrorInfo;
 import com.coconut.quiz_service.domain.quiz.exception.ExceedOpenAiQuotaException;
 import com.coconut.quiz_service.domain.quiz.exception.InvalidOpenAiKeyException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -16,7 +19,8 @@ import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
 @RestControllerAdvice
-public class QuizExceptionHandler {
+@Order(ControllerAdviceOrder.SERVICE)
+public class QuizExceptionHandler extends BaseControllerAdvice {
 
   @ResponseStatus(TOO_MANY_REQUESTS)
   @ExceptionHandler(ExceedOpenAiQuotaException.class)
@@ -34,12 +38,4 @@ public class QuizExceptionHandler {
     return CustomResponse.of(errorInfo);
   }
 
-  private HttpErrorInfo createHttpErrorInfo(HttpStatus httpStatus, WebRequest req, Exception ex) {
-    final String path = req.getDescription(false).replace("uri=", "");
-    final String message = ex.getMessage();
-    final String errorName = ex.getClass().getName();
-
-    log.debug("Returning HTTP status: {} for path: {}, message: {}, error name: {}", httpStatus, path, message, errorName);
-    return new HttpErrorInfo(httpStatus, path, message, errorName);
-  }
 }

@@ -2,8 +2,8 @@ package com.coconut.quiz_service.domain.jobposting.controller;
 
 import com.coconut.global.constant.OrderBy;
 import com.coconut.global.constant.SortBy;
-import com.coconut.global.dto.ListReqDto;
-import com.coconut.global.dto.ListResDto;
+import com.coconut.jpa_utils.dto.ListReqDto;
+import com.coconut.jpa_utils.dto.ListResDto;
 import com.coconut.quiz_service.domain.jobposting.constants.JobPostingStatus;
 import com.coconut.quiz_service.domain.jobposting.dto.JobPostingDto;
 import com.coconut.quiz_service.domain.jobposting.service.interfaces.JobPostingService;

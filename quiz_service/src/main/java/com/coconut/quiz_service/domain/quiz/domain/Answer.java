@@ -1,7 +1,7 @@
 package com.coconut.quiz_service.domain.quiz.domain;
 
 
-import com.coconut.global.domain.BaseEntity;
+import com.coconut.jpa_utils.domain.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Builder;

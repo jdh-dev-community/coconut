@@ -22,6 +22,7 @@ public class CustomLoginFilter extends AbstractAuthenticationProcessingFilter {
   public CustomLoginFilter(String defaultFilterProcessesUrl, AuthenticationManager authenticationManager) {
     super(new AntPathRequestMatcher(defaultFilterProcessesUrl), authenticationManager);
   }
+
   @Override
   public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
 
@@ -43,6 +44,17 @@ public class CustomLoginFilter extends AbstractAuthenticationProcessingFilter {
 
   @Override
   protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-    System.out.println("bye: >>" + failed.getMessage());
+    log.info("Authentication fail!!");
+
+    String jsonPayload = String.format("{\"error\": \"아이디 혹은 비밀번호를 확인해주세요.\", \"message\": \"%s\"}", failed.getMessage());
+
+    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    response.setContentType("application/json");
+    response.setCharacterEncoding("UTF-8");
+
+    response.getWriter().write(jsonPayload);
+    response.getWriter().flush();
+    response.getWriter().close();
+
   }
 }

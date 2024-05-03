@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j
@@ -53,6 +54,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
       AuthUserDetails details = objectMapper.convertValue(result.getResult(), AuthUserDetails.class);
       return details;
+    }
+    catch (ResourceAccessException e) {
+      throw new RuntimeException("유저 서버에 문제가 발생하였습니다.");
     } catch (Exception e) {
       throw new UsernameNotFoundException("유저 데이터를 가져오는 중 문제가 발생하였습니다. [url: " + url + "]");
     }

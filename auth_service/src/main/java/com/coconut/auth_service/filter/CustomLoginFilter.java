@@ -46,7 +46,7 @@ public class CustomLoginFilter extends AbstractAuthenticationProcessingFilter {
   protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
     log.info("Authentication fail!!");
 
-    String jsonPayload = String.format("{\"error\": \"아이디 혹은 비밀번호를 확인해주세요.\", \"message\": \"%s\"}", failed.getMessage());
+    String jsonPayload = String.format("{\"error\": \"회원 인증에 실패하였습니다.\", \"message\": \"%s\"}", failed.getMessage());
 
     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     response.setContentType("application/json");

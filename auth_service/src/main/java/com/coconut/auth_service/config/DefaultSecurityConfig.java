@@ -1,12 +1,12 @@
 package com.coconut.auth_service.config;
 
-
 import com.coconut.auth_service.filter.CustomLoginFilter;
 import com.coconut.auth_service.filter.JwtFilter;
 import com.coconut.auth_service.filter.LoginInputValidationFilter;
 import com.coconut.auth_service.service.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -15,21 +15,29 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class DefaultSecurityConfig {
 
   private final AuthenticationConfiguration authenticationConfiguration;
 
   private final JwtService jwtService;
 
   private final ObjectMapper objectMapper;
-  private final String loginUri = "/api/v1/login";
+  private final String loginUri = "/api/v1/auth/login";
+
 
   @Bean
   public PasswordEncoder passwordEncoder() {
@@ -40,6 +48,7 @@ public class SecurityConfig {
   public SecurityFilterChain loginFilterChain(HttpSecurity http) throws Exception {
 
     http
+            .securityMatcher(loginUri)
             .csrf((auth) -> auth.disable())
             .formLogin((auth) -> auth.disable())
             .httpBasic((auth) -> auth.disable())
@@ -57,4 +66,6 @@ public class SecurityConfig {
 
     return http.build();
   }
+
+
 }

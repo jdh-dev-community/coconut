@@ -1,12 +1,14 @@
 package com.coconut.auth_service.config;
 
 import com.coconut.auth_service.filter.CustomLoginFilter;
+import com.coconut.auth_service.filter.ExceptionHandlerFilter;
 import com.coconut.auth_service.filter.JwtFilter;
 import com.coconut.auth_service.filter.LoginInputValidationFilter;
 import com.coconut.auth_service.service.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -38,6 +40,9 @@ public class DefaultSecurityConfig {
   private final ObjectMapper objectMapper;
   private final String loginUri = "/api/v1/auth/login";
 
+  @Value("${login_redirect_url}")
+  private String redirectUrl;
+
 
   @Bean
   public PasswordEncoder passwordEncoder() {
@@ -61,6 +66,7 @@ public class DefaultSecurityConfig {
 
     http
             .addFilterBefore(new LoginInputValidationFilter(objectMapper), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(new ExceptionHandlerFilter(redirectUrl), LoginInputValidationFilter.class)
             .addFilterAt(new CustomLoginFilter(loginUri, authenticationConfiguration.getAuthenticationManager()), UsernamePasswordAuthenticationFilter.class)
             .addFilterAfter(new JwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
 

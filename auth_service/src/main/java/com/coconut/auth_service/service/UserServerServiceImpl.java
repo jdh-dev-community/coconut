@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException.NotFound;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
@@ -31,21 +32,31 @@ public class UserServerServiceImpl implements UserServerService {
             .append("?email=" + email)
             .toString();
 
-    AuthUserDetails authUser = getUserFromUserServer(url);
-    return authUser;
+    try {
+      AuthUserDetails authUser = getUserFromUserServer(url);
+      return authUser;
+    } catch (UsernameNotFoundException e) {
+      return null;
+    }
+
   }
 
-  private AuthUserDetails getUserFromUserServer(String url) throws UsernameNotFoundException {
+  private AuthUserDetails getUserFromUserServer(String url) {
     try {
       ResponseEntity<CustomResponse> responseEntity = restTemplate.getForEntity(url, CustomResponse.class);
       CustomResponse<AuthUserDetails> result = responseEntity.getBody();
 
       AuthUserDetails details = objectMapper.convertValue(result.getResult(), AuthUserDetails.class);
       return details;
+    } catch (NotFound e) {
+      log.error("Not Found: >> ", e);
+      throw new UsernameNotFoundException("일치하는 유저가 존재하지 않습니다. [url: " + url + "]");
     } catch (ResourceAccessException e) {
-      throw new RuntimeException("유저 서버에 문제가 발생하였습니다.");
+      log.error("ResourceAccessException: >> ", e);
+      throw new ResourceAccessException("유저 서버에 문제가 발생하였습니다.");
     } catch (Exception e) {
-      throw new UsernameNotFoundException("유저 데이터를 가져오는 중 문제가 발생하였습니다. [url: " + url + "]");
+      log.error("Exception: >> ", e);
+      throw new RuntimeException("유저 데이터를 가져오는 중 문제가 발생하였습니다. [url: " + url + "]");
     }
   }
 }

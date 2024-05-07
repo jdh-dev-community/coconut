@@ -20,7 +20,7 @@ public class User extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Id
   @Column(name = "user_id", nullable = false)
-  private long userId;
+  private String userId;
 
   @Schema(description = "유저의 id", example = "apeofj@coconut.com")
   @Column(name = "email", unique = true, nullable = false)
@@ -47,7 +47,7 @@ public class User extends BaseEntity {
   private String interest;
 
   @Builder
-  public User(long userId, String email, String password, String nickname, String mobile, String signinType, String interest) {
+  public User(String userId, String email, String password, String nickname, String mobile, String signinType, String interest) {
     this.userId = userId;
     this.email = email;
     this.nickname = nickname;

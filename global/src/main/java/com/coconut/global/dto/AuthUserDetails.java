@@ -10,13 +10,13 @@ import lombok.Getter;
 
 @Schema(description = "로그인시에 auth서버와 user서버 간 통신을 위한 dto")
 public class AuthUserDetails {
-  private long userId;
+  private String userId;
 
   private String email;
 
   private String password;
 
-  public static AuthUserDetails of (long userId, String email, String password) {
+  public static AuthUserDetails of (String userId, String email, String password) {
     return new AuthUserDetails(userId, email, password);
   }
 

@@ -22,10 +22,10 @@ public class JwtService {
   public String generateJWT(JwtCreateDto dto) {
 
     Date expireDate = getExpireDate(duration);
-    long userId = dto.getUserId();
+    String userId = dto.getUserId();
 
     return Jwts.builder()
-            .setSubject(userId + "")
+            .setSubject(userId)
             .setIssuedAt(new Date())
             .setExpiration(expireDate)
             .signWith(SignatureAlgorithm.HS256, secretKey)

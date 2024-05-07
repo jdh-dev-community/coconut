@@ -1,5 +1,6 @@
 package com.coconut.auth_service.config;
 
+import com.coconut.auth_service.service.CustomOauth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,8 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class OauthSecurityConfig {
+
+  private final CustomOauth2UserService customOauth2UserService;
   private final String oauthLogin = OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI + "/*";
   private final String oauthRedirect = OAuth2LoginAuthenticationFilter.DEFAULT_FILTER_PROCESSES_URI;
 
@@ -23,15 +26,18 @@ public class OauthSecurityConfig {
   @Bean
   public SecurityFilterChain oauthFilterChain(HttpSecurity http) throws Exception {
 
-    return http
+    http
             .securityMatcher(oauthLogin, oauthRedirect)
             .csrf((auth) -> auth.disable())
             .authorizeHttpRequests(auth -> {
               auth.anyRequest().authenticated();
             }).oauth2Login((auth) -> {
-              auth.successHandler(oauth2LoginSuccessHandler);
-            }).build();
+              auth
+                      .userInfoEndpoint(config -> config.userService(customOauth2UserService))
+                      .successHandler(oauth2LoginSuccessHandler);
+            });
 
+    return http.build();
   }
 
 }

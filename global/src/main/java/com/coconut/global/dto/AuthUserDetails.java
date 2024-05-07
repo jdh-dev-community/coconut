@@ -10,6 +10,8 @@ import lombok.Getter;
 
 @Schema(description = "로그인시에 auth서버와 user서버 간 통신을 위한 dto")
 public class AuthUserDetails {
+  private String provider;
+
   private String userId;
 
   private String email;
@@ -17,7 +19,11 @@ public class AuthUserDetails {
   private String password;
 
   public static AuthUserDetails of (String userId, String email, String password) {
-    return new AuthUserDetails(userId, email, password);
+    return new AuthUserDetails("coconut", userId, email, password);
+  }
+
+  public static AuthUserDetails of (String provider, String userId, String email, String password) {
+    return new AuthUserDetails(provider, userId, email, null);
   }
 
   @Override

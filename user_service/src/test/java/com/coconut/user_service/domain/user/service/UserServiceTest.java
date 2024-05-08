@@ -1,8 +1,9 @@
 package com.coconut.user_service.domain.user.service;
 
+import com.coconut.global.constant.SignInType;
+import com.coconut.global.dto.UserCreateReqDto;
+import com.coconut.global.dto.UserDto;
 import com.coconut.user_service.domain.user.domain.User;
-import com.coconut.user_service.domain.user.dto.UserCreateDto;
-import com.coconut.user_service.domain.user.dto.UserDto;
 import com.coconut.user_service.domain.user.repository.UserRepository;
 import com.coconut.user_service.domain.user.service.interfaces.UserService;
 import org.junit.jupiter.api.AfterEach;
@@ -11,16 +12,13 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.persistence.EntityNotFoundException;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -43,16 +41,16 @@ public class UserServiceTest {
 
   @Nested
   class 유저_생성_테스트 {
-    private UserCreateDto userCreateDto;
+    private UserCreateReqDto userCreateDto;
 
     @BeforeEach
     public void setup() {
-      userCreateDto = UserCreateDto.of(
+      userCreateDto = UserCreateReqDto.of(
+              SignInType.EMAIL,
               "test@gmail.com",
               "test123!",
               "010-1111-1111",
-              "email",
-              "backend"
+              "test nickname"
       );
 
     }
@@ -80,26 +78,26 @@ public class UserServiceTest {
     }
 
     @Test
-    public void 이메일_회원가입의_경우_이메일이_없으면_예외가_발생() {
-      UserCreateDto invalidDto = UserCreateDto.of(
+    public void 이메일_회원가입의_경우_이메일이_없으면_DataIntegrityViolationException예외가_발생() {
+      UserCreateReqDto invalidDto = UserCreateReqDto.of(
+              SignInType.EMAIL,
               null,
               "test123!",
               "010-1111-1111",
-              "email",
-              "backend"
+              "test nickname"
       );
 
-      assertThrows(IllegalArgumentException.class, () -> userService.createUser(invalidDto));
+      assertThrows(DataIntegrityViolationException.class, () -> userService.createUser(invalidDto));
     }
 
     @Test
     public void 이메일_회원가입의_경우_비밀번호가_없으면_예외가_발생() {
-      UserCreateDto invalidDto = UserCreateDto.of(
-              "test@gmail.com",
+      UserCreateReqDto invalidDto = UserCreateReqDto.of(
+              SignInType.EMAIL,
+              null,
               null,
               "010-1111-1111",
-              "email",
-              "backend"
+              "test nickname"
       );
 
       assertThrows(IllegalArgumentException.class, () -> userService.createUser(invalidDto));

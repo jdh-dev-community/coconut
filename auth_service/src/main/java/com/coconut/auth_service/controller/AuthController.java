@@ -14,6 +14,10 @@ public class AuthController {
     return "login";
   }
 
+  @PostMapping("/auth/signin")
+  public String signin() {
+    return "signin";
+  }
 
   @GetMapping("/auth/health")
   public String check() {

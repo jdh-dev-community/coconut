@@ -1,5 +1,6 @@
 package com.coconut.auth_service.dto;
 
+import com.coconut.global.constant.SignInType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,11 +14,15 @@ import java.util.Collection;
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-  private String userId;
+  private long userId;
 
   private String username;
 
   private String password;
+
+  private SignInType signInType;
+
+  private String nickname;
 
   private Collection<? extends GrantedAuthority> authorities;
 

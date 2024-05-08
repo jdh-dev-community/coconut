@@ -1,7 +1,5 @@
 package com.coconut.user_service.domain.user.controller;
 
-
-import com.coconut.user_service.domain.user.dto.UserCreateDto;
 import com.coconut.user_service.domain.user.service.interfaces.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +40,7 @@ public class UserControllerTest {
   public void setup() {
     this.defaultRequest = Map.of(
             "signinType", "email",
-            "userId", "test@coco",
+            "email", "test@coco",
             "password", "qwer1234#!",
             "mobile", "010-1111-1111",
             "interest", "backend"
@@ -51,8 +49,6 @@ public class UserControllerTest {
 
   @Nested
   class 회원가입_테스트 {
-    private UserCreateDto userCreateDto;
-    private String targetUrl = baseUrl + "/signin";
 
     @Test
     public void 적절한_회원가입_데이터가_제공된_경우_200_응답_반환() throws Exception {
@@ -85,7 +81,7 @@ public class UserControllerTest {
 
 
     private ResultActions postAndVerify(String body) throws Exception {
-      return mockMvc.perform(post(targetUrl)
+      return mockMvc.perform(post(baseUrl)
               .contentType(MediaType.APPLICATION_JSON)
               .content(body)
       );

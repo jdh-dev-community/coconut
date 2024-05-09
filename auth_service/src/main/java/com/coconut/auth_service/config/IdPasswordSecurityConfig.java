@@ -45,29 +45,23 @@ public class IdPasswordSecurityConfig {
   }
 
 
-//  @Bean
-//  public SecurityFilterChain loginFilterChain(HttpSecurity http) throws Exception {
-//
-//    http
-//            .securityMatcher(loginUri)
-//            .csrf((auth) -> auth.disable())
-//            .formLogin((auth) -> auth.disable())
-//            .httpBasic((auth) -> auth.disable())
-//            .sessionManagement((session) -> session
-//                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-//
-//    http
-//            .authorizeHttpRequests((auth) -> auth
-//                    .requestMatchers(loginUri).authenticated());
-//
-//    http
-//            .addFilterBefore(new IdPasswordValidationFilter(objectMapper), UsernamePasswordAuthenticationFilter.class)
-//            .addFilterBefore(new ExceptionHandlerFilter(redirectUrl), IdPasswordValidationFilter.class)
-//            .addFilterAt(new CustomLoginFilter(loginUri, authenticationConfiguration.getAuthenticationManager()), UsernamePasswordAuthenticationFilter.class)
-//            .addFilterAfter(new JwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
-//
-//    return http.build();
-//  }
+  @Bean
+  public SecurityFilterChain loginFilterChain(HttpSecurity http) throws Exception {
+    HttpSecurity customizedHttp = setDefaultConfig(http);
+
+    customizedHttp
+            .securityMatcher(loginUri)
+            .authorizeHttpRequests((auth) -> auth
+                    .requestMatchers(loginUri).authenticated());
+
+    customizedHttp
+            .addFilterBefore(new ExceptionHandlerFilter(redirectUrl), UsernamePasswordAuthenticationFilter.class)
+            .addFilterAfter(new IdPasswordValidationFilter(objectMapper), ExceptionHandlerFilter.class)
+            .addFilterAt(new CustomLoginFilter(loginUri, authenticationConfiguration.getAuthenticationManager()), UsernamePasswordAuthenticationFilter.class)
+            .addFilterAfter(new JwtFilter(jwtService), CustomLoginFilter.class);
+
+    return http.build();
+  }
 
   @Bean
   public SecurityFilterChain signInFilterChain(HttpSecurity http) throws Exception {

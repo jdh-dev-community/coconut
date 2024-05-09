@@ -32,6 +32,7 @@ public class IdPasswordUserDetailService implements EnhancedDetailService {
             .signInType(userDto.getSigninType())
             .userId(userDto.getUserId())
             .username(userDto.getEmail())
+            .password(userDto.getPassowrd())
             .nickname(userDto.getNickname())
             .build();
 
@@ -71,7 +72,7 @@ public class IdPasswordUserDetailService implements EnhancedDetailService {
   }
 
   @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    return null;
+  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    return loadUserByEmailAndSignInType(email, SignInType.EMAIL);
   }
 }

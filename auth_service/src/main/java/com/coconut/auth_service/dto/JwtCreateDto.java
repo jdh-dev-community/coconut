@@ -7,9 +7,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class JwtCreateDto {
-  private String userId;
+  private long userId;
 
-  public static JwtCreateDto of(String userId) {
+  public static JwtCreateDto of(long userId) {
     return new JwtCreateDto(userId);
   }
 

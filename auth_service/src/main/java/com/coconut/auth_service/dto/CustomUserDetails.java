@@ -16,6 +16,7 @@ public class CustomUserDetails implements UserDetails {
 
   private long userId;
 
+  // email을 username으로 사용
   private String username;
 
   private String password;

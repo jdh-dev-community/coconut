@@ -31,11 +31,11 @@ public class UserControllerAdvice extends BaseControllerAdvice {
     return CustomResponse.of(errorInfo);
   }
 
-  @ResponseStatus(CONFLICT)
+  @ResponseStatus(BAD_REQUEST)
   @ExceptionHandler(DataIntegrityViolationException.class)
   public @ResponseBody CustomResponse handleDataIntegrityViolationException(WebRequest req, DataIntegrityViolationException ex) {
     log.info("error handler: handleDataIntegrityViolationException");
-    HttpErrorInfo errorInfo = createHttpErrorInfo(CONFLICT, req, ex);
+    HttpErrorInfo errorInfo = createHttpErrorInfo(BAD_REQUEST, req, ex);
     return CustomResponse.of(errorInfo);
   }
 

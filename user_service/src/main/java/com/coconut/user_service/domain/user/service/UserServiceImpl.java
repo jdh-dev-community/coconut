@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDto createUser(UserCreateReqDto dto) {
-    String encryptedPassword = passwordEncoder.encode(dto.getPassword());
+    String encryptedPassword = dto.getPassword() != null ? passwordEncoder.encode(dto.getPassword()) : null;
     User user = userMapper.from(dto, encryptedPassword);
 
     userRepository.save(user);

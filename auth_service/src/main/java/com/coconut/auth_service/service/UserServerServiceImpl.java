@@ -9,17 +9,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpClientErrorException.Conflict;
+import org.springframework.web.client.HttpClientErrorException.BadRequest;
 import org.springframework.web.client.HttpClientErrorException.NotFound;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -32,6 +30,22 @@ public class UserServerServiceImpl implements UserServerService {
   @Value("${internal_service.user}")
   private String baseUrl;
 
+
+  @Override
+  public UserDto upsertUser(UserCreateReqDto details) {
+    String email = details.getEmail();
+    SignInType signInType = details.getSigninType();
+
+    UserDto existedUser = findUserByEmailAndSignInType(email, signInType);
+
+    if (Objects.isNull(existedUser)) {
+      return saveUser(details);
+    } else {
+      // 유저 정보 업데이트
+      return existedUser;
+    }
+
+  }
 
   @Override
   public UserDto saveUser(UserCreateReqDto details) {
@@ -87,8 +101,8 @@ public class UserServerServiceImpl implements UserServerService {
       UserDto details = objectMapper.convertValue(result.getResult(), UserDto.class);
 
       return details;
-    } catch (Conflict e) {
-      throw new RuntimeException("이미 사용된 email 입니다. 다른 email을 사용해주세요");
+    } catch (BadRequest e) {
+      throw e;
     } catch (ResourceAccessException e) {
       log.error("ResourceAccessException: >> ", e);
       throw new ResourceAccessException("유저 서버에 문제가 발생하였습니다.");

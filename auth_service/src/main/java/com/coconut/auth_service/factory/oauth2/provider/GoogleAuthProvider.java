@@ -1,26 +1,29 @@
 package com.coconut.auth_service.factory.oauth2.provider;
 
 import com.coconut.auth_service.factory.oauth2.interfaces.OauthProvider;
-import com.coconut.global.dto.AuthUserDetails;
+import com.coconut.global.constant.SignInType;
+import com.coconut.global.dto.UserCreateReqDto;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class GoogleAuthProvider implements OauthProvider {
-  public final String PROVIDER_NAME = "google";
+  public final SignInType PROVIDER_NAME = SignInType.GOOGLE;
 
   @Override
   public String getProviderName() {
-    return PROVIDER_NAME;
+    return PROVIDER_NAME.getType();
   }
 
   @Override
-  public AuthUserDetails parseOAuth2User(OAuth2User user) {
-    String providerId = user.getAttribute("sub");
+  public UserCreateReqDto parseOAuth2User(OAuth2User user) {
+
+
     String email = user.getAttribute("email");
+    String nickname = UUID.randomUUID().toString();
 
-    String userId = PROVIDER_NAME + "_" + providerId;
-
-    return AuthUserDetails.of(PROVIDER_NAME, userId, email, null);
+    return UserCreateReqDto.of(PROVIDER_NAME, email, nickname);
   }
 }

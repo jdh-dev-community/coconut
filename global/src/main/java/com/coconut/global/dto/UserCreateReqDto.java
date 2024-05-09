@@ -40,8 +40,8 @@ public class UserCreateReqDto {
     return new UserCreateReqDto(signinType, email, password, mobile, nickname);
   }
 
-  public static UserCreateReqDto of(SignInType signinType, String email, String password) {
-    return new UserCreateReqDto(signinType, email, password, null, null);
+  public static UserCreateReqDto of(SignInType signinType, String email, String nickname) {
+    return new UserCreateReqDto(signinType, email, null, null, nickname);
   }
 
 }

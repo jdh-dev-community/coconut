@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.client.HttpClientErrorException.Conflict;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -26,12 +27,22 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
     } catch (ResourceAccessException e) {
       handleResourceAccessException(e, response);
+    } catch (Conflict e) {
+      handleConflictException(e, response);
     }
   }
 
   private void handleResourceAccessException(ResourceAccessException e, HttpServletResponse response) throws IOException {
     log.info("handleResourceAccessException: >> redirect to " + redirectUrl);
     String url = redirectUrl + "?reason=" + URLEncoder.encode(e.getMessage(), "UTF-8");
+    response.sendRedirect(url);
+  }
+
+  private void handleConflictException(Conflict e, HttpServletResponse response) throws IOException {
+    log.info("handleConflictException: >> redirect to " + redirectUrl);
+    String url = redirectUrl + "?reason=" + URLEncoder.encode("동일한 email의 회원이 존재합니다.", "UTF-8");
+
+    response.setCharacterEncoding("UTF-8");
     response.sendRedirect(url);
   }
 }

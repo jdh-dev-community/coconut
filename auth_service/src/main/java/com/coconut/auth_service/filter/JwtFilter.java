@@ -5,6 +5,7 @@ import com.coconut.auth_service.dto.JwtCreateDto;
 import com.coconut.auth_service.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -32,11 +33,10 @@ public class JwtFilter extends OncePerRequestFilter {
       CustomUserDetails details = extractUserDetails(securityContext);
 
       JwtCreateDto dto = JwtCreateDto.of(details.getUserId());
-      String jwt = jwtService.generateJWT(dto);
+      Cookie jwtCookie = jwtService.generateJwtInCookie(dto);
 
       response.setStatus(HttpServletResponse.SC_OK);
-      response.setContentType("application/json");
-      response.getWriter().write("{\"token\": \"" + jwt + "\"}");
+      response.addCookie(jwtCookie);
       response.getWriter().flush();
     } catch (Exception e) {
       response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());

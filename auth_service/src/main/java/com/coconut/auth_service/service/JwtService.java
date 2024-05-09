@@ -3,6 +3,7 @@ package com.coconut.auth_service.service;
 import com.coconut.auth_service.dto.JwtCreateDto;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,17 @@ public class JwtService {
   @Value("${jwt.secret}")
   private String secretKey;
 
+  public Cookie generateJwtInCookie(JwtCreateDto dto) {
+    String jwtToken = generateJWT(dto);
+
+    Cookie jwtCookie = new Cookie("jwt", jwtToken);
+    jwtCookie.setHttpOnly(true);
+    jwtCookie.setSecure(true);
+    jwtCookie.setPath("/");
+    jwtCookie.setMaxAge(7 * 24 * 60 * 60);
+
+    return jwtCookie;
+  }
 
   public String generateJWT(JwtCreateDto dto) {
 

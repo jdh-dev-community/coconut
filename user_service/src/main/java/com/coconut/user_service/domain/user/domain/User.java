@@ -28,7 +28,7 @@ public class User extends BaseEntity {
   private String email;
 
   @Schema(description = "유저의 pw", example = "a@@efae123")
-  @Column(name = "password", nullable = false)
+  @Column(name = "password")
   private String password;
 
   @Schema(description = "유저의 닉네임", example = "따뜻한키위")
@@ -36,7 +36,7 @@ public class User extends BaseEntity {
   private String nickname;
 
   @Schema(description = "유저의 전화번호", example = "010-1111-1111")
-  @Column(name = "mobile", nullable = false)
+  @Column(name = "mobile")
   private String mobile;
 
   @Schema(description = "회원가입 방법 (이메일, 구글 ... )", example = "email")

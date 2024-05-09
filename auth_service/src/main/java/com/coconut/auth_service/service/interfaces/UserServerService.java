@@ -7,4 +7,6 @@ import com.coconut.global.dto.UserDto;
 public interface UserServerService {
   UserDto saveUser(UserCreateReqDto details);
   UserDto findUserByEmailAndSignInType(String email, SignInType signInType);
+
+  UserDto upsertUser(UserCreateReqDto details);
 }

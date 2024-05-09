@@ -54,12 +54,11 @@ public class IdPasswordSigninValidationFilter extends OncePerRequestFilter {
     String email = dto.getEmail();
     String password = dto.getPassword();
     String mobile = dto.getMobile();
-    String nick = dto.getNickname();
 
     Boolean isValidEmail = emailValidator.isValid(email);
     Boolean isValidPw = passwordValidator.validate(new PasswordData(password)).isValid();
 
-    boolean isNotEmpty = List.of(email, password, mobile, nick).stream().allMatch(Objects::nonNull);
+    boolean isNotEmpty = List.of(email, password, mobile).stream().allMatch(Objects::nonNull);
 
     return isNotEmpty && isValidEmail && isValidPw;
   }

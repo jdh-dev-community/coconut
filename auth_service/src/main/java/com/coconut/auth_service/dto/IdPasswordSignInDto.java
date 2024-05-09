@@ -24,18 +24,14 @@ public class IdPasswordSignInDto {
   @Schema(description = "전화번호", example = "010-1111-1111")
   private final String mobile;
 
-  @Schema(description = "유저 닉네임", example = "backend")
-  private final String nickname;
-
   private final SignInType signInType;
 
   @JsonCreator
-  public static IdPasswordSignInDto of(String email, String password, String mobile, String nickname) {
+  public static IdPasswordSignInDto of(String email, String password, String mobile) {
     return IdPasswordSignInDto.builder()
             .email(email)
             .password(password)
             .mobile(mobile)
-            .nickname(nickname)
             .signInType(SignInType.EMAIL)
             .build();
   }

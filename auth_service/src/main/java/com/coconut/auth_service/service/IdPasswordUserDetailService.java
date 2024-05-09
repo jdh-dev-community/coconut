@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.UUID;
 
 
 @Slf4j
@@ -66,7 +67,7 @@ public class IdPasswordUserDetailService implements EnhancedDetailService {
     String email = dto.getEmail();
     String password = dto.getPassword();
     String mobile = dto.getMobile();
-    String nickname = dto.getNickname();
+    String nickname = UUID.randomUUID().toString();
 
     return UserCreateReqDto.of(signInType, email, password, mobile, nickname);
   }

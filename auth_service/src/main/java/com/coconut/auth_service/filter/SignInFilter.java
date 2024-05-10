@@ -58,7 +58,7 @@ public class SignInFilter extends OncePerRequestFilter {
     CustomResponse<HttpErrorInfo> result = CustomResponse.of(error);
     String jsonResponse = objectMapper.writeValueAsString(result);
 
-    response.setStatus(HttpServletResponse.SC_CREATED);
+    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     response.setContentType("application/json; charset=UTF-8");
     response.setCharacterEncoding("UTF-8");
     response.getWriter().write(jsonResponse);

@@ -1,6 +1,7 @@
 package com.coconut.auth_service.config;
 
 import com.coconut.auth_service.filter.ExceptionHandlerFilter;
+import com.coconut.auth_service.filter.Oauth2LoginSuccessHandler;
 import com.coconut.auth_service.service.CustomOauth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +36,7 @@ public class OauthSecurityConfig {
     http
             .securityMatcher(oauthLogin, oauthRedirect)
             .csrf((auth) -> auth.disable())
-            .authorizeHttpRequests(auth -> {
-              auth.anyRequest().authenticated();
-            }).oauth2Login((auth) -> {
+            .oauth2Login((auth) -> {
               auth
                       .userInfoEndpoint(config -> config.userService(customOauth2UserService))
                       .successHandler(oauth2LoginSuccessHandler);

@@ -2,7 +2,6 @@ package com.coconut.auth_service.config;
 
 import com.coconut.auth_service.filter.*;
 import com.coconut.auth_service.service.JwtService;
-//import com.coconut.auth_service.service.interfaces.EnhancedDetailService;
 import com.coconut.auth_service.service.interfaces.EnhancedDetailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

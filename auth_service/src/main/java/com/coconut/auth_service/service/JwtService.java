@@ -1,12 +1,14 @@
 package com.coconut.auth_service.service;
 
 import com.coconut.auth_service.dto.JwtCreateDto;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.security.Key;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -18,6 +20,33 @@ public class JwtService {
 
   @Value("${jwt.secret}")
   private String secretKey;
+
+
+  public boolean validateJWT(String jwt) {
+    Jws<Claims> parser = getJwtParser(jwt);
+
+    Claims claims = parser.getBody();
+    JwsHeader header = parser.getHeader();
+
+    if (claims.getExpiration().before(new Date())) {
+      throw new ExpiredJwtException(header, claims, "토큰의 유효시간이 경과하였습니다.");
+    }
+
+    return true;
+  }
+
+  public Jws<Claims> getJwtParser(String jwt) {
+    try {
+      Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
+
+      return Jwts.parserBuilder()
+              .setSigningKey(key)
+              .build()
+              .parseClaimsJws(jwt);
+    } catch (Exception e) {
+      throw new SignatureException("서명에 문제가 있는 토큰입니다.");
+    }
+  }
 
   public Cookie generateJwtInCookie(JwtCreateDto dto) {
     String jwtToken = generateJWT(dto);

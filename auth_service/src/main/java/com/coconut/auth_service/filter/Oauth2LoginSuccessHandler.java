@@ -1,4 +1,4 @@
-package com.coconut.auth_service.config;
+package com.coconut.auth_service.filter;
 
 import com.coconut.auth_service.dto.CustomOauth2User;
 import com.coconut.auth_service.dto.JwtCreateDto;

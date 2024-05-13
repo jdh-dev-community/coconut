@@ -100,7 +100,7 @@ public class UserServiceTest {
               "test nickname"
       );
 
-      assertThrows(IllegalArgumentException.class, () -> userService.createUser(invalidDto));
+      assertThrows(DataIntegrityViolationException.class, () -> userService.createUser(invalidDto));
     }
   }
 

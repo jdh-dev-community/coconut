@@ -9,12 +9,14 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Slf4j
 public class JwtExceptionFilter extends OncePerRequestFilter {
   private final ObjectMapper objectMapper;
 
@@ -31,6 +33,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     } catch (SignatureException e) {
       handleSignatureException(request, response, e);
     } catch (AccessDeniedException e) {
+      log.info("AccessDeniedException: >> " + e.getMessage());
       handleAccessDeniedException(request, response, e);
     }
   }

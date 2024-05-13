@@ -27,8 +27,8 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
     String accessToken = extractAccessToken(request);
+
 
     if (Objects.nonNull(accessToken) && jwtService.validateJWT(accessToken)) {
       response.setStatus(HttpServletResponse.SC_OK);
@@ -36,13 +36,14 @@ public class JwtValidationFilter extends OncePerRequestFilter {
       response.getWriter().flush();
     }
 
+    log.info("accessToken: >> " + accessToken);
     throw new AccessDeniedException("유효하지 않은 요청입니다.");
   }
 
 
   private String extractAccessToken(HttpServletRequest request) {
     Cookie[] cookies = request.getCookies();
-    Cookie[] checkedCookie =Objects.isNull(cookies) ? new Cookie[0] : cookies;
+    Cookie[] checkedCookie = Objects.isNull(cookies) ? new Cookie[0] : cookies;
 
     Optional<String> accessToken = Arrays.stream(checkedCookie)
             .filter(cookie -> "jwt".equals(cookie.getName()))

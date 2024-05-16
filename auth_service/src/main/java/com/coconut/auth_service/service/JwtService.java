@@ -5,6 +5,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.Cookie;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 @Service
+@Slf4j
 public class JwtService {
 
   @Value("${jwt.duration}")
@@ -50,7 +52,7 @@ public class JwtService {
 
   public Cookie generateJwtInCookie(JwtCreateDto dto) {
     String jwtToken = generateJWT(dto);
-
+    log.info("jwtToken: >> " + jwtToken);
     Cookie jwtCookie = new Cookie("jwt", jwtToken);
     jwtCookie.setHttpOnly(true);
     jwtCookie.setSecure(true);

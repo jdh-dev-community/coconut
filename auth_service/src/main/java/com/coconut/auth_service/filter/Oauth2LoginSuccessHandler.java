@@ -31,7 +31,7 @@ public class Oauth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
   @Override
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                       Authentication authentication) throws ServletException, IOException {
-
+    log.info("Authentication success!!");
     CustomOauth2User userDetails = (CustomOauth2User) authentication.getPrincipal();
 
     JwtCreateDto dto = JwtCreateDto.of(userDetails.getUserId());

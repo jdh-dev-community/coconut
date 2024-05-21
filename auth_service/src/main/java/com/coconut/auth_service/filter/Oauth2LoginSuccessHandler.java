@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -35,8 +36,8 @@ public class Oauth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
     CustomOauth2User userDetails = (CustomOauth2User) authentication.getPrincipal();
 
     JwtCreateDto dto = JwtCreateDto.of(userDetails.getUserId());
-    Cookie jwtCookie = jwtService.generateJwtInCookie(dto);
-    response.addCookie(jwtCookie);
+    ResponseCookie jwtCookie = jwtService.generateJwtInCookie(dto);
+    response.addHeader("Set-Cookie", jwtCookie.toString());
 
     this.setDefaultTargetUrl(redirectUrl);
     super.onAuthenticationSuccess(request, response, authentication);

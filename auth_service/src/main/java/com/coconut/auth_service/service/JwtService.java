@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.Cookie;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -50,16 +51,23 @@ public class JwtService {
     }
   }
 
-  public Cookie generateJwtInCookie(JwtCreateDto dto) {
+  public ResponseCookie generateJwtInCookie(JwtCreateDto dto) {
     String jwtToken = generateJWT(dto);
     log.info("jwtToken: >> " + jwtToken);
-    Cookie jwtCookie = new Cookie("jwt", jwtToken);
-    jwtCookie.setHttpOnly(true);
-    jwtCookie.setSecure(true);
-    jwtCookie.setPath("/");
-    jwtCookie.setMaxAge(7 * 24 * 60 * 60);
+    ResponseCookie cookie = ResponseCookie.from("jwt", jwtToken)
+            .httpOnly(true)
+            .secure(true)
+            .path("/")
+            .maxAge(7 * 24 * 60 * 60)
+            .build();
 
-    return jwtCookie;
+    //    Cookie jwtCookie = new Cookie("jwt", jwtToken);
+//    jwtCookie.setHttpOnly(true);
+//    jwtCookie.setSecure(true);
+//    jwtCookie.setPath("/");
+//    jwtCookie.setMaxAge(7 * 24 * 60 * 60);
+
+    return cookie;
   }
 
   public String generateJWT(JwtCreateDto dto) {

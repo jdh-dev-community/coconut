@@ -9,6 +9,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,10 +34,10 @@ public class JwtFilter extends OncePerRequestFilter {
       CustomUserDetails details = extractUserDetails(securityContext);
 
       JwtCreateDto dto = JwtCreateDto.of(details.getUserId());
-      Cookie jwtCookie = jwtService.generateJwtInCookie(dto);
+      ResponseCookie jwtCookie = jwtService.generateJwtInCookie(dto);
 
       response.setStatus(HttpServletResponse.SC_OK);
-      response.addCookie(jwtCookie);
+      response.addHeader("Set-Cookie", jwtCookie.toString());
       response.getWriter().flush();
     } catch (Exception e) {
       response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());

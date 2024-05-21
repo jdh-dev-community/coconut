@@ -59,13 +59,8 @@ public class JwtService {
             .secure(true)
             .path("/")
             .maxAge(7 * 24 * 60 * 60)
+            .sameSite("None")
             .build();
-
-    //    Cookie jwtCookie = new Cookie("jwt", jwtToken);
-//    jwtCookie.setHttpOnly(true);
-//    jwtCookie.setSecure(true);
-//    jwtCookie.setPath("/");
-//    jwtCookie.setMaxAge(7 * 24 * 60 * 60);
 
     return cookie;
   }

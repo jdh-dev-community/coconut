@@ -60,6 +60,7 @@ public class JwtService {
             .path("/")
             .maxAge(7 * 24 * 60 * 60)
             .sameSite("None")
+            .domain("coconutapp.co.kr")
             .build();
 
     return cookie;

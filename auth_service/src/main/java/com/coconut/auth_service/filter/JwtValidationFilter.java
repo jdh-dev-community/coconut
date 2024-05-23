@@ -35,6 +35,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
       response.setStatus(HttpServletResponse.SC_OK);
       response.getWriter().write("Access Granted");
       response.getWriter().flush();
+      return;
     }
 
 

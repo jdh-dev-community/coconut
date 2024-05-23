@@ -25,7 +25,6 @@ public class JwtService {
   @Value("${jwt.secret}")
   private String secretKey;
 
-  // 시크릿 키를 Key 객체로 변환하는 메서드
   private Key getSigningKey() {
     byte[] keyBytes = Base64.getDecoder().decode(secretKey);
     return Keys.hmacShaKeyFor(keyBytes);

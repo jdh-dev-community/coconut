@@ -4,7 +4,6 @@ import com.coconut.auth_service.dto.JwtCreateDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import jakarta.servlet.http.Cookie;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
@@ -35,11 +34,8 @@ public class JwtService {
     try {
       log.info("validate started: >>");
       Jws<Claims> parser = getJwtParser(jwt.trim());
-      log.info("parser: >>" + parser);
       Claims claims = parser.getBody();
       JwsHeader header = parser.getHeader();
-
-      log.info("claims: >>" + claims);
 
       if (claims.getExpiration().before(new Date())) {
         throw new ExpiredJwtException(header, claims, "토큰의 유효시간이 경과하였습니다.");
@@ -55,7 +51,6 @@ public class JwtService {
 
   public Jws<Claims> getJwtParser(String jwt) {
     try {
-      Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
 
       return Jwts.parserBuilder()
               .setSigningKey(getSigningKey())

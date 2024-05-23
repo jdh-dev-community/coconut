@@ -27,9 +27,8 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-    log.info("started: >> ");
+
     String accessToken = extractAccessToken(request);
-    log.info("accessToken: >> " + accessToken);
 
     if (Objects.nonNull(accessToken) && jwtService.validateJWT(accessToken)) {
       response.setStatus(HttpServletResponse.SC_OK);

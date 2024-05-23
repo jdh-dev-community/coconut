@@ -27,9 +27,9 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-    log.info("started: >> " );
+    log.info("started: >> ");
     String accessToken = extractAccessToken(request);
-
+    log.info("accessToken: >> " + accessToken);
 
     if (Objects.nonNull(accessToken) && jwtService.validateJWT(accessToken)) {
       response.setStatus(HttpServletResponse.SC_OK);
@@ -37,29 +37,22 @@ public class JwtValidationFilter extends OncePerRequestFilter {
       response.getWriter().flush();
     }
 
-    log.info("accessToken: >> " + accessToken);
+
     throw new AccessDeniedException("유효하지 않은 요청입니다.");
   }
 
 
   private String extractAccessToken(HttpServletRequest request) {
-    try {
-      log.info("extract: >> ");
-      Cookie[] cookies = request.getCookies();
-      log.info("cookies: >> " + cookies);
-      Cookie[] checkedCookie = Objects.isNull(cookies) ? new Cookie[0] : cookies;
+    Cookie[] cookies = request.getCookies();
+    Cookie[] checkedCookie = Objects.isNull(cookies) ? new Cookie[0] : cookies;
 
-      Optional<String> accessToken = Arrays.stream(checkedCookie)
-              .peek(cookie -> log.info("Cookie name: " + cookie.getName() + ", value: " + cookie.getValue()))
-              .filter(cookie -> "jwt".equals(cookie.getName()))
-              .map((cookie -> cookie.getValue()))
-              .findFirst();
+    Optional<String> accessToken = Arrays.stream(checkedCookie)
+            .peek(cookie -> log.info("Cookie name: " + cookie.getName() + ", value: " + cookie.getValue()))
+            .filter(cookie -> "jwt".equals(cookie.getName()))
+            .map((cookie -> cookie.getValue()))
+            .findFirst();
 
-      return accessToken.orElse(null);
-    } catch (Exception ex) {
-      log.info("err: >> ", ex);
-      return null;
-    }
+    return accessToken.orElse(null);
 
   }
 }

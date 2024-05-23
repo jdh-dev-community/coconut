@@ -26,10 +26,13 @@ public class JwtService {
 
 
   public boolean validateJWT(String jwt) {
+    log.info("validate started: >>");
     Jws<Claims> parser = getJwtParser(jwt);
-
+    log.info("parser: >>" + parser);
     Claims claims = parser.getBody();
     JwsHeader header = parser.getHeader();
+
+    log.info("claims: >>" + claims);
 
     if (claims.getExpiration().before(new Date())) {
       throw new ExpiredJwtException(header, claims, "토큰의 유효시간이 경과하였습니다.");

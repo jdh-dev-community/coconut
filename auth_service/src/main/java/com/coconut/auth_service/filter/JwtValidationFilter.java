@@ -27,6 +27,10 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+<<<<<<< Updated upstream
+=======
+    log.info("started: >> " );
+>>>>>>> Stashed changes
     String accessToken = extractAccessToken(request);
 
 

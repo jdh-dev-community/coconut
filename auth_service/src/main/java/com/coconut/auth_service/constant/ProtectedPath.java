@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 public class ProtectedPath {
   private final String baseV1 = "/api/v1";
 
-  private final List<String> quizService = List.of("/quiz/jobposting", "/answer");
+  private final List<String> quizService = List.of("/validation");
 
   private final List<String> communityService = List.of();
 

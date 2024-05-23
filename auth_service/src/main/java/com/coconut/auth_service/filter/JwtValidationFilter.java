@@ -43,14 +43,22 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
 
   private String extractAccessToken(HttpServletRequest request) {
-    Cookie[] cookies = request.getCookies();
-    Cookie[] checkedCookie = Objects.isNull(cookies) ? new Cookie[0] : cookies;
+    try {
+      log.info("extract: >> ");
+      Cookie[] cookies = request.getCookies();
+      log.info("cookies: >> " + cookies);
+      Cookie[] checkedCookie = Objects.isNull(cookies) ? new Cookie[0] : cookies;
 
-    Optional<String> accessToken = Arrays.stream(checkedCookie)
-            .filter(cookie -> "jwt".equals(cookie.getName()))
-            .map((cookie -> cookie.getValue()))
-            .findFirst();
+      Optional<String> accessToken = Arrays.stream(checkedCookie)
+              .filter(cookie -> "jwt".equals(cookie.getName()))
+              .map((cookie -> cookie.getValue()))
+              .findFirst();
 
-    return accessToken.orElse(null);
+      return accessToken.orElse(null);
+    } catch (Exception ex) {
+      log.info("err: >> ", ex);
+      return null;
+    }
+
   }
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 
 @Service
@@ -23,6 +24,12 @@ public class JwtService {
 
   @Value("${jwt.secret}")
   private String secretKey;
+
+  // 시크릿 키를 Key 객체로 변환하는 메서드
+  private Key getSigningKey() {
+    byte[] keyBytes = Base64.getDecoder().decode(secretKey);
+    return Keys.hmacShaKeyFor(keyBytes);
+  }
 
 
   public boolean validateJWT(String jwt) {
@@ -52,7 +59,7 @@ public class JwtService {
       Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
 
       return Jwts.parserBuilder()
-              .setSigningKey(key)
+              .setSigningKey(getSigningKey())
               .build()
               .parseClaimsJws(jwt);
     } catch (Exception e) {
@@ -85,7 +92,7 @@ public class JwtService {
             .setSubject(String.valueOf(userId))
             .setIssuedAt(new Date())
             .setExpiration(expireDate)
-            .signWith(SignatureAlgorithm.HS256, secretKey)
+            .signWith(SignatureAlgorithm.HS256, getSigningKey())
             .compact();
   }
 

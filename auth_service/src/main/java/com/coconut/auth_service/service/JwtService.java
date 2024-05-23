@@ -28,7 +28,7 @@ public class JwtService {
   public boolean validateJWT(String jwt) {
     try {
       log.info("validate started: >>");
-      Jws<Claims> parser = getJwtParser(jwt);
+      Jws<Claims> parser = getJwtParser(jwt.trim());
       log.info("parser: >>" + parser);
       Claims claims = parser.getBody();
       JwsHeader header = parser.getHeader();
@@ -56,6 +56,7 @@ public class JwtService {
               .build()
               .parseClaimsJws(jwt);
     } catch (Exception e) {
+      log.error("token error: >> " + e);
       throw new SignatureException("서명에 문제가 있는 토큰입니다.");
     }
   }

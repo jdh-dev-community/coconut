@@ -50,6 +50,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
       Cookie[] checkedCookie = Objects.isNull(cookies) ? new Cookie[0] : cookies;
 
       Optional<String> accessToken = Arrays.stream(checkedCookie)
+              .peek(cookie -> log.info("Cookie name: " + cookie.getName() + ", value: " + cookie.getValue()))
               .filter(cookie -> "jwt".equals(cookie.getName()))
               .map((cookie -> cookie.getValue()))
               .findFirst();

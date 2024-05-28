@@ -116,7 +116,8 @@ Cloud Watch를 사용하여 서버에 문제가 있는 경우 discord에 알림�
 
 ### 쓰기에 시간을 쓸 것인가? 읽기에 시간을 쓸 것인가? [블로그](https://iwsaitw.tistory.com/entry/%EC%93%B0%EA%B8%B0%EC%97%90-%EC%8B%9C%EA%B0%84%EC%9D%84-%EC%93%B8-%EA%B2%83%EC%9D%B8%EA%B0%80-%EC%9D%BD%EA%B8%B0%EC%97%90-%EC%8B%9C%EA%B0%84%EC%9D%84-%EC%93%B8-%EA%B2%83%EC%9D%B8%EA%B0%80) <br />
 
-테이블 설계에 따라 성능차이가 얼마나 나는지 테스트를 하고 정리를 해보았습니다.
+게시글과 댓글을 갖는 테이블 설계 시에 쓰기에 유리한 설계와 읽기에 유리한 설계를 각각 작성하고,
+데이터 크기에 따라서 성능 차이가 얼마나 발생하는지 확인해보았습니다.
 ![8](https://github.com/jdh-dev-community/coconut/assets/77978026/b3ee9006-13b5-428f-a718-24794b3a0b63)
 
 <br />

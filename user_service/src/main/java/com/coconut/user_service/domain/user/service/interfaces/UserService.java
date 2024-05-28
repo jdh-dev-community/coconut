@@ -1,8 +1,10 @@
 package com.coconut.user_service.domain.user.service.interfaces;
 
-import com.coconut.user_service.domain.user.dto.UserCreateDto;
-import com.coconut.user_service.domain.user.dto.UserDto;
+import com.coconut.global.constant.SignInType;
+import com.coconut.global.dto.UserCreateReqDto;
+import com.coconut.global.dto.UserDto;
 
 public interface UserService {
-  UserDto createUser(UserCreateDto dto);
+  UserDto createUser(UserCreateReqDto dto);
+  UserDto getUserByEmailAndSignInType(String email, SignInType signInType);
 }

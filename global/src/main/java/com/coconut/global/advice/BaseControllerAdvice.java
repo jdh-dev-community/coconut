@@ -13,7 +13,7 @@ public class BaseControllerAdvice {
     final String message = ex.getMessage();
     final String errorName = ex.getClass().getName();
 
-    log.debug("Returning HTTP status: {} for path: {}, message: {}, error name: {}", httpStatus, path, message, errorName);
+    log.info("Returning HTTP status: {} for path: {}, message: {}, error name: {}", httpStatus, path, message, errorName);
     return new HttpErrorInfo(httpStatus, path, message, errorName);
   }
 

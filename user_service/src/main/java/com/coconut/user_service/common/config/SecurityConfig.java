@@ -20,8 +20,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .csrf().disable()
             .authorizeRequests()
             .antMatchers("/**").permitAll()  // "/api/**" 경로를 인증 없이 접근 허용
-            .anyRequest().permitAll()
-            .and()
-            .httpBasic();  // 기본 HTTP 인증 활성화
+            .anyRequest().permitAll();
   }
 }

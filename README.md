@@ -9,9 +9,10 @@
 
 ### 기술 스택
 
-- 서버: Spring Boot, Java, JPA, QueryDSL, Spring Security, Swagger
+- 설계: 5개의 서비스로 구현된 MSA, 멀티 모듈로 서비스 관리
+- 서비스: Spring Boot, Java, JPA, QueryDSL, Spring Security, Swagger
 - 데이터베이스: MySQL, Redis
-- 인프라: Docker, AWS (ec2, route53, s3, ecr, codepipeline, rds, cloudwatch ...)
+- 인프라: Nginx, Docker, AWS (ec2, route53, s3, ecr, codepipeline, rds, cloudwatch ...)
 - 프론트: Nextjs, Typescript
 
 <br>

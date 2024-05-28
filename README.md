@@ -5,11 +5,12 @@
 서비스 링크 : https://coconutapp.co.kr <br />
 서비스 히스토리 : [https://iwsaitw.tistory.com/category/운영 중인 서비스/Coconut.](https://iwsaitw.tistory.com/category/%EC%9A%B4%EC%98%81%20%EC%A4%91%EC%9D%B8%20%EC%84%9C%EB%B9%84%EC%8A%A4/Coconut.)
 
-![service_ui](https://github.com/jdh-dev-community/coconut/assets/77978026/205c761f-5401-44cb-86c9-6ea0219a5856)
+![Screenshot 2024-05-17 at 3 57 2](https://github.com/jdh-dev-community/coconut/assets/77978026/d773fd2f-95e4-4457-b109-ad89cf4c80c3)
+
 
 ### 기술 스택
 
-- 설계: 5개의 서비스로 구현된 MSA, 멀티 모듈로 서비스 관리
+- 설계: 점진적으로 MSA 구축 중 (현재 4개의 서비스 + 1개 프록시서버 구성), 멀티 모듈로 서비스 관리
 - 서비스: Spring Boot, Java, JPA, QueryDSL, Spring Security, Swagger
 - 데이터베이스: MySQL, Redis
 - 인프라: Nginx, Docker, AWS (ec2, route53, s3, ecr, codepipeline, rds, cloudwatch ...)

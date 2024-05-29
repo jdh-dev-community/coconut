@@ -101,7 +101,7 @@ Cloud Watch를 사용하여 서버에 문제가 있는 경우 discord에 알림�
 
 ## 6. 통합 테스트
 
-테스트 데이터베이스를 사용하고, mockMvc를 사용하여 api 콜을 모방하여 테스트를 진행하였습니다. (퀴즈 서비스 / 커뮤니티 서비스) ( <br />
+테스트 데이터베이스를 사용하고, mockMvc를 사용하여 api 콜을 모방하여 테스트를 진행하였습니다. (퀴즈 서비스 / 커뮤니티 서비스) <br />
 블로그: [멀티 쓰레드 환경에서 조회수 증가 검증](https://iwsaitw.tistory.com/entry/%EB%A9%80%ED%8B%B0-%EC%93%B0%EB%A0%88%EB%93%9C-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EA%B2%8C%EC%8B%9C%EA%B8%80-%EC%A1%B0%ED%9A%8C%EC%88%98-%EC%A6%9D%EA%B0%80%EC%97%90-%EB%8C%80%ED%95%9C-%EA%B2%80%EC%A6%9D)
 
 ![Group 206](https://github.com/jdh-dev-community/coconut/assets/77978026/58102c2e-05a6-4f9f-8be4-b5feba664451)

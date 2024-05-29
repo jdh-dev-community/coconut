@@ -2,7 +2,7 @@
 
 ## Summary
 
-서비스 링크 : https://coconutapp.co.kr <br />
+서비스 링크 : https://coconutapp.co.kr (테스트 id: `admin@gmail.com` // 테스트 pw: `Qwer1234#!`) <br />
 서비스 히스토리 : [https://iwsaitw.tistory.com/category/운영 중인 서비스/Coconut.](https://iwsaitw.tistory.com/category/%EC%9A%B4%EC%98%81%20%EC%A4%91%EC%9D%B8%20%EC%84%9C%EB%B9%84%EC%8A%A4/Coconut.)
 
 ![Screenshot 2024-05-17 at 3 57 2](https://github.com/jdh-dev-community/coconut/assets/77978026/d773fd2f-95e4-4457-b109-ad89cf4c80c3)
